@@ -1,0 +1,55 @@
+Assignment 3
+#+SETUPFILE: options.org
+* TODO
+  DEADLINE: <2009-11-19 Gio>
+
+Given:
+$\beta = 2, t = 24, e_{min} = -126, e_{max} = 127$
+
+* 1) Smallest floating point number larger than 2
+  We can take the representation of 2 (given it's not unique) given with the smallest exponent.\newline
+#+BEGIN_CENTER
+  $2 = .100000000000000000000000 \times 2^2$
+#+END_CENTER
+  Now we just set 1 to the least significant bit:
+
+#+BEGIN_CENTER
+  $2 + \epsilon = .100000000000000000000001 \times 2^2$
+#+END_CENTER
+  
+* 2) Larger floating point number smaller than 8
+  Same concept applies, we take the representation of 8 with the smallest exponent.
+#+BEGIN_CENTER 
+  $8 = .100000000000000000000000 * 2^4$
+#+END_CENTER
+
+#+BEGIN_CENTER
+  $8 - \epsilon = .011111111111111111111111 * 2^3$
+#+END_CENTER
+
+* 3) How many floating point numbers in interval [1/64, 1/32]
+  We must count how many numbers are representable from: \newline
+#+BEGIN_CENTER
+  $\frac{1}{32} = .100000000000000000000000 \times 2^{-4}$ \newline
+#+END_CENTER
+  to \newline:
+#+BEGIN_CENTER
+  $\frac{1}{64} = .100000000000000000000000 \times 2^{-5}$ \newline
+#+END_CENTER
+  
+  Changing the last 23 bits of the mantissa we can represent then *2^23* floating point numbers.
+  
+
+* 4) First integer not representable exacly
+  To get the first integer not exacly representable we take the maximum possible exponent and see what's the next integer.
+
+#+BEGIN_CENTER
+  $max = .111111111111111111111111 \times 2^{127}$ \newline
+#+END_CENTER
+
+  Which after some simplifications leads to:
+
+#+BEGIN_CENTER
+#  Sum[2^i, {i, 103, 126}] + 1
+  $170141173319264429905852091742258462721$
+#+END_CENTER

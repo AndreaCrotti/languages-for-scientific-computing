@@ -1,0 +1,46 @@
+
+* Floating point numbers
+  We get an inexact arithmetic, *NO ASSOCIATIVITY*
+  You can't guarantee identical results for parallel computation.
+
+  example:
+  $f(x) = x^2 + \sin(
+  2*x)$
+
+  If we pass to the function a number which is approximated we will get errors.
+  In banking they always use base 10 because they don't want ever to lose anything.
+  
+  0 it's not representable, we just have conventions to represent it.
+  
+  *NaN* is when for example you divide for 0.
+
+** Machine precision *u*
+   Two different equivalent definitions:
+   - Smallest positive number sche that [1 + *u*] \neq 1.
+   - Largest positive number such that [1 + *u*] = 1.
+   
+* Representation error
+  See main theorem, the error should never be too big.
+
+** Forward / Backward stability
+   Forward and backward stability tells us how good is an approsimation.
+
+* Matlab
+  Interpreted language.
+
+* FFT
+  Decomposing a signal in its own frequencies.
+  Discrete Fourier Transform:
+  FFT is a particular implementation of discrete fourier transform.
+  
+  $F_m = F_m^T$ (FFT is symmetric)
+
+* Kronecker Product
+  A * B multiplies every element for the second matrix
+
+* Twiddle Factors
+
+
+* 2D FFT
+  $Y := F_m X F_n$
+  Assuming image is periodic and recompose it in a bunch of sinusoids.

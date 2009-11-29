@@ -1,0 +1,20 @@
+Matrix A partitione and stored over 4 processors.
+
+Instructions available are:
+
+#+BEGIN_SRC
+Y = get(var_name, j, tag)
+#Asynchronous operation to the the variable $var_name from processor
+#tagging the operation with $tag.
+complete(tag)
+# idle until the data transfer tagged is done
+sync()
+#pi idles until all processors have issued a sync
+
+#+END_SRC
+
+The main danger here is to lose many computation cycles waiting for processors to have finished.
+
+So we need a strategy where the parallelism is maximized while maintaining the correctness is guaranteed.
+
+Sum of matrices is not a difficult operation.

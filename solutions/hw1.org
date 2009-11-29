@@ -1,0 +1,52 @@
+#+AUTHOR Andrea Crotti (#299466)
+#+OPTIONS: toc:nil
+#+EMAIL: andrea.crotti@rwth-aachen.de
+ASSIGNMENT 1
+
+Our goal is to compute the C matrix, which is given by B and A matrices.
+
+All the elements of matrix C to be computed need all the 4 processors.
+The processors can work in parallel but must be synced sometimes.
+
+Possible instruction to use are:
+- *Y = get(var_name, j, tag)*
+  fetches the content of /var_name/ from processor /pj/ and store it to /Y/ in processor i.
+  This is asynchronous and tagged by a numerical tag.
+
+- *complete(tag)*
+  Wait for the transfer to finish
+
+- *sync()*
+  pi idles until they have all given a /sync/ instruction.
+
+The sync have to be minimized, at minimum we need a sync when calculating the whole B and the whole C matrices.
+
+Rewriting the final matrix in form of the beginning matrix *A* we get that:
+
+\begin{eqnarray}
+Ctl = (Atl + Atr) + (Abl + Abr)\\
+Ctr = (Atl - Atr) + (Abl - Abr)\\
+Cbl = (Atl + Atr) - (Abl + Abr)\\
+Cbr = (Atl - Atr) - (Abl - Abr)
+\end{eqnarray}
+
+From that we can notice that there are only 4 quantities to compute to get our final result.
+
+So we just need to store those 4 basic quantities in the 4 processors and then we can directly compute our C matrix.
+
+|------------------+------------------+------------------+------------------+-------------|
+| P0               | P1               | P2               | P3               | ALL         |
+|------------------+------------------+------------------+------------------+-------------|
+| X = get(Atr,1,0) | X = get(Atl,0,0) | X = get(Bbr,0,0) | X = get(Bbl,0,0) |             |
+|                  |                  |                  |                  | complete(0) |
+| P0 += X          | P1 -= X          | P2 += X          | P3 -= X          |             |
+|------------------+------------------+------------------+------------------+-------------|
+|                  |                  |                  |                  | sync()      |
+|------------------+------------------+------------------+------------------+-------------|
+| Y = get(P2,2,1)  | Y = get(P3,3,1)  | Y = get(P0,0,1)  | Y = get(P1,1,1)  |             |
+|                  |                  |                  |                  | complete(1) |
+| P0 += Y          | P1 += Y          | P2 = -P2 + Y     | P3 = -P3 + Y     |             |
+|------------------+------------------+------------------+------------------+-------------|
+|                  |                  |                  |                  | sync()      |
+|------------------+------------------+------------------+------------------+-------------|
+

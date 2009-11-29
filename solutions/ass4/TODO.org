@@ -1,0 +1,23 @@
+
+* TODO Write a Matlab function [[file:F2.m][F2]] that takes a matrix X as input and returns Y
+  Trying to write elegant code 
+  
+* TODO Implement the function [[file:D.m][D]]
+  
+* TODO Use F or fft2 for recursive calls to F
+
+* TODO Compare the implementation against fft2 for accuracy and speed
+
+* TODO Write a function INC that takes as input a 2-dimensional array Spectr, and two integers m and n.
+
+* TODO INC returns an (m×n) multiplot.
+
+* TODO The (i,j)-th plot contains the 2D FFT of the (i,j)-th tile of Spectr, where Spectr is subdivided in (m×n) tiles.
+
+* TODO Use the output of ifft2 (inverse 2D FFT) as the input for INC.
+
+* TODO Use imread to load an image, and rgb2gray to create a b&w picture.
+
+* TODO Use imshow to generate images. Pay attention to the second argument.
+
+* TODO Use abs to go from complex to real data. Experiment with several values of m and n.

@@ -5,7 +5,7 @@ function M = P(n,p)
   v = zeros(n,1);
 
 
-  for j=1:p
+  for j = 1:p
     v((j - 1) * m+1:j * m) = j:p:n;
     end
 

@@ -12,5 +12,11 @@ endfunction
 
 ## FIRST problem, no "rgb2gray" present on octave
 ## imread and imshow are working
-imread("WorldChampions.png")
+img = imread("WorldChampions.png");
+
+## we get the image as a matrix
+
+
+## Second argument of imshow is the range limit given as vector
+## mm no the display range is not so interestingma
 imshow("WorldChampions.png")

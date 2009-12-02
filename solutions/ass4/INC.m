@@ -4,7 +4,13 @@ function mplot = INC(Spectr, m, n)
     for y = 1 : n
       ## one smaller square
       subplot(x, y, x*y)
-      fplot(fft2(Spectr(x, y)))
+      fplot(fft2(Spectr(x : x + m, y : y + m)))
     endfor
   endfor
 endfunction
+
+
+## FIRST problem, no "rgb2gray" present on octave
+## imread and imshow are working
+imread("WorldChampions.png")
+imshow("WorldChampions.png")

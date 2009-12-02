@@ -1,5 +1,8 @@
 
-* TODO Write a Matlab function [[file:F2.m][F2]] that takes a matrix X as input and returns Y
+* DONE Write a Matlab function [[file:F2.m][F2]] that takes a matrix X as input and returns Y
+  CLOSED: [2009-12-02 Mer 23:51]
+  - CLOSING NOTE [2009-12-02 Mer 23:51] \\
+    function written, testing now
   Trying to write elegant code 
   
 * TODO Implement the function [[file:D.m][D]]

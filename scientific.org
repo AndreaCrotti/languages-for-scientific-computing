@@ -1,4 +1,3 @@
-
 * Floating point numbers
   We get an inexact arithmetic, *NO ASSOCIATIVITY*
   You can't guarantee identical results for parallel computation.
@@ -40,7 +39,10 @@
 
 * Twiddle Factors
 
-
 * 2D FFT
   $Y := F_m X F_n$
   Assuming image is periodic and recompose it in a bunch of sinusoids.
+
+
+* C language
+  

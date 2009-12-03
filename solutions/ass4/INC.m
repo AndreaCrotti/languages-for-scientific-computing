@@ -9,7 +9,10 @@ function mplot = INC(Spectr, m, n)
       ## one smaller square
       ## HERE goes out of bounds
       A = Spectr(x : x + m - 1, y : y + n - 1);
-      mplot(x : x + m - 1, y : y + n - 1) = fft2(A);
+      ##mplot(x : x + m - 1, y : y + n - 1) = fft2(A);
+      ## divide the "screen"
+      subplot(x, y, x*y)
+      fplot(fft2(A))
     endfor
   endfor
 endfunction

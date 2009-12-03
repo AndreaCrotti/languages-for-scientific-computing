@@ -1,8 +1,3 @@
-## Usage:
-## img = imread("img")
-## newimg = DROP(img, k)
-## imshow(newimg)
-
 function image = DROP(img, k)
 
   ## usage: DROP (img, k)
@@ -42,4 +37,4 @@ function image = DROP(img, k)
 endfunction
 
 img = imread("WorldChampions.png");
-imshow(DROP(img, 0.5))
+imshow(abs(DROP(img, 0.5)))

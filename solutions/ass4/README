@@ -3,7 +3,7 @@ The test case for the function F2 is defined in F2_test.
 Test it with an argument greater than 0.
 
 For example we could do the following, and see that the difference with the predefined function is very small while the execution is 2 orders of magnitude slower.
-octave-3.2.3> F2_test(10)
+octave-3.2.3> F2_test(2)
 Square matrix of size 10:
 	fft2 = 0.000199 seconds
 	  f2 = 0.015966 seconds

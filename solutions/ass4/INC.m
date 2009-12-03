@@ -7,11 +7,13 @@ function mplot = INC(Spectr, m, n)
   for x = 1 : m : rows(Spectr)
     for y = 1 : n : columns(Spectr)
       ## one smaller square
-      ## HERE goes out of bounds
+      ## FIXME: HERE goes out of bounds
       A = Spectr(x : x + m - 1, y : y + n - 1);
       ##mplot(x : x + m - 1, y : y + n - 1) = fft2(A);
       ## divide the "screen"
       subplot(x, y, x*y)
+      ## If I understood correctly we should create an image
+      ## split in M x N small images as the professor showed in class
       fplot(fft2(A))
     endfor
   endfor
@@ -26,6 +28,6 @@ img = sum(double(imread("WorldChampions.png")), 3);
 ## we get the image as a matrix
 newimg = INC(fft2(img), 2, 2);
 
-## Second argument of imshow is the range limit given as vector
-## mm no the display range is not so interestingma
-imshow(newimg);
+## Necessary also to use abs to go
+## abs can also convert entire matrices
+imshow(abs(newimg));

@@ -1,5 +1,5 @@
 ## X is a square matrix
-function Y = MF (X)
+function Y = F2 (X)
 
 k = 2;
 n = rows (X) / k;
@@ -24,45 +24,37 @@ for r = 1 : n
     end
 end
 
-d = D (k, n);
 ## Multiplicating with D on the left and right
+d = D (k, n);
 for r = 1 : n
     for c = 1 : n
-	Ytl (r, c) =         d (r, r) * Xtl (r, c) * d (r, r); Ytr (r, c) =         d (r, r) * Xtr (r, c) * d (r + n, r + n);
-	Ybl (r, c) = d (r + n, r + n) * Xbl (r, c) * d (r, r); Ybr (r, c) = d (r + n, r + n) * Xbr (r, c) * d (r + n, r + n);
+	Ytl (r, c) =         d (r, r) * Xtl (r, c) * d (c, c); Ytr (r, c) =         d (r, r) * Xtr (r, c) * d (c + n, c + n);
+	Ybl (r, c) = d (r + n, r + n) * Xbl (r, c) * d (c, c); Ybr (r, c) = d (r + n, r + n) * Xbr (r, c) * d (c + n, c + n);
     end
 end
 
-KP = kron (eye (k), F (n));
-KP_tl = KP (    1 : n  ,     1 : n);
-KP_br = KP (n + 1 : end, n + 1 : end);
 ## Multiplicating with Kronecker product on the left
-Xtl = KP_tl * Ytl; Xtr = KP_tl * Ytr;
-Xbl = KP_br * Ybl; Xbr = KP_br * Ybr;
+KP = F (n);
+Xtl = KP * Ytl; Xtr = KP * Ytr;
+Xbl = KP * Ybl; Xbr = KP * Ybr;
 
 ## Multiplicating with Kronecker product on the right
-Xtl = Xtl * KP_tl; Xtr = Xtr * KP_br;
-Xbl = Xbl * KP_tl; Xbr = Xbr * KP_br;
+Xtl = Xtl * KP; Xtr = Xtr * KP;
+Xbl = Xbl * KP; Xbr = Xbr * KP;
 
 ## Multiplicating with the permutation matrix on the left
-for i = 1 : k
-    for j = i : k : n * k
-	if (j > n)
-	    j = mod (j, n) + 1;
-	end
-	Ytl (j    , :) = Xtl (j, :)    ; Ytr (j    , :) = Xtr (j    , :);
-    end
-end
+p = P (n * k, n);
+ptl = p (    1 : n  , 1 : n); ptr = p (    1 : n  , n + 1 : end);
+pbl = p (n + 1 : end, 1 : n); pbr = p (n + 1 : end, n + 1 : end);
+Ytl = ptl * Xtl + ptr * Xbl; Ytr = ptl * Xtr + ptr * Xbr;
+Ybl = pbl * Xtl + pbr * Xbl; Ybr = pbl * Xtr + pbr * Xbr;
 
-## Multiplicating with the transpose of the permutation matrix on the right
-for i = 1 : k
-    for j = i : k : n * k
-	if (j > n)
-	    j = mod (j, n) + 1;
-	end
-	Xtl (:, j    ) = Ytl (:, j)    ; Xtr (:, j    ) = Ytr (:, j    );
-    end
-end
+## Multiplicating with the permutation matrix on the right
+pT = p';
+pTtl = pT (    1 : n  , 1 : n); pTtr = pT (    1 : n  , n + 1 : end);
+pTbl = pT (n + 1 : end, 1 : n); pTbr = pT (n + 1 : end, n + 1 : end);
+Xtl = Ytl * pTtl + Ytr * pTbl; Xtr = Ytl * pTtr + Ytr * pTbr;
+Xbl = Ybl * pTtl + Ybr * pTbl; Xbr = Ybl * pTtr + Ybr * pTbr;
 
 Y = zeros (n * k);
 Y (    1 : n  , 1 : n) = Xtl; Y (    1 : n  , n + 1 : end) = Xtr;

@@ -11,7 +11,14 @@ function mplot = INC(Spectr, m, n)
 endfunction
 
 
-## FIRST problem, no "rgb2gray" present on octave
-## imread and imshow are working
-imread("WorldChampions.png")
+## no "rgb2gray" present on octave, we can do
+## as given here http://www.montefiore.ulg.ac.be/~piater/Cours/octave+matlab.php
+
+img = sum(double(imread("WorldChampions.png")), 3)
+
+## we get the image as a matrix
+
+
+## Second argument of imshow is the range limit given as vector
+## mm no the display range is not so interestingma
 imshow("WorldChampions.png")

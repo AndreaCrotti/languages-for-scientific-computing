@@ -46,12 +46,12 @@ Xbl = Xbl * KP_tl; Xbr = Xbr * KP_br;
 
 % Multiplicating with the permutation matrix on the left
 for i = 1 : k
-    for j = i : k : n * k
-	if (j <= n)
-	    Ytl (j    , :) = Xtl (j, :)    ; Ytr (j    , :) = Xtr (j    , :);
-	else
-	    Ybl (j % n, :) = Xbl (j % n, :); Ybr (j % n, :) = Xbr (j % n, :);
-	end
+  for j = i : k : n * k
+    if (j <= n)
+      Ytl (j    , :) = Xtl (j, :)    ; Ytr (j    , :) = Xtr (j    , :);
+    else
+      Ybl (j % n, :) = Xbl (j % n, :); Ybr (j % n, :) = Xbr (j % n, :);
+	   end
     end
 end
 

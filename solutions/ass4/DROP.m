@@ -1,4 +1,3 @@
-## FIXME: infinite loop maybe?
 ## Usage:
 ## img = imread("img")
 ## newimg = DROP(img, k)
@@ -17,7 +16,6 @@ function image = DROP(img, k)
 
   ## create a new matrix of 0, we'll then fill in the taken values from ff
   ## which are inside the circle
-  newmat = zeros(rows(ff), columns(ff));
 
   ## to check if something in in the circle we can use the formula
   ## (x - cx)^2 + (y - cy)^2 <= r^2
@@ -27,14 +25,21 @@ function image = DROP(img, k)
   r = rows(ff) * k;
 
   ## If we're sure that the matrix is square we can maybe simplify
+  ## FIXME: find a smarter way to filter out a part of the matrix
+  ## this way is too slow because it checks all elements of the matrix
   for x = 1 : rows(ff)
+    ##printf("on row %d\n", x);
     for y = 1 : columns(ff)
-      if ((x - cx)^2 + (y - cy)^2 <= r^2)
-	newmat(x, y) = ff(x, y);
+      ## when outside the circle set to 0
+      if ((x - cx)^2 + (y - cy)^2 > r^2)
+	ff(x, y) = 0;
       endif
     endfor
   endfor
   
   ## returning the inverse ttf
-  image = ifft2(newmat);
+  image = ifft2(ff);
 endfunction
+
+img = imread("WorldChampions.png");
+imshow(DROP(img, 0.5))

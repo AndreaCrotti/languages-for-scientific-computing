@@ -1,4 +1,3 @@
-# gcc MV.c -o MV -L/home/pauldj/works/libs/GotoBLAS -lgoto -lg2c -lpthread ; ./MV
 BLAS = $(HOME)/libs/c/blas
 CC = gcc
 DEBUG = -g
@@ -13,7 +12,7 @@ run_trsv : trsv
 run_andrea : andrea
 	./andrea
 
-trsv :
+trsv : 
 	$(CC) $(CFLAGS) -o trsv trsv.c
 
 andrea :
@@ -21,6 +20,3 @@ andrea :
 
 clean:
 	rm -v trsv trsv.o andrea andrea.o
-
-# andrea:
-# 	$(CC)

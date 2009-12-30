@@ -6,7 +6,7 @@
 
 // Solve Lx=y using blas functions
 void trsv(double **, double *, int, int);
-double **gen_matrix(int);
+double *gen_matrix(int);
 int debug = 1;
 
 int main(int argc, char *argv[])
@@ -33,19 +33,21 @@ int main(int argc, char *argv[])
 
 // add a more general way to print a matrix
 
-double ** gen_matrix(int n) {
-  int i, j;
+double * gen_matrix(int n) {
+  int i, j, idx;
   // we before set the seed for the random function to be called later
-  double **bigl = malloc(sizeof(double) * n * n);
+  double *bigl = malloc(sizeof(double) * n * n);
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {
-      bigl[i][j] = drand48(); // setting to a random double <0,1>
+      idx = j*n + i;
+      bigl[idx] = drand48(); // setting to a random double <0,1>
 
       if (debug)
-	printf("%f\t", bigl[i][j]);
+	printf("%f\t", bigl[idx]);
 
+      // FIXME: this is never executed
       if (i == j)
-	bigl[i][j] += n * 1.0;
+	bigl[idx] += n * 1.0;
     }
     printf("\n");
   }

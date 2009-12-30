@@ -1,0 +1,5 @@
+all: targets
+
+
+
+clean:

@@ -20,3 +20,6 @@ andrea :
 
 clean:
 	rm -v trsv trsv.o andrea andrea.o
+
+tar : 
+	tar -cvzf andrea_crotti.tar.gz andrea.c trsv.c

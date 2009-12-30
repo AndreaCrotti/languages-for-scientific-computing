@@ -46,13 +46,17 @@ double * gen_matrix(int n) {
 	printf("%f\t", bigl[idx]);
 
       // FIXME: this is never executed
-      if (i == j)
+      if (i == j) {
+	if (debug)
+	  printf("set on the diagonal");
 	bigl[idx] += n * 1.0;
+      }
     }
     printf("\n");
   }
   return bigl;
 }
+
 
 void trsv(double **L, double *y, int n, int b) {
   

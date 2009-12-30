@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h> // for timing the execution
+#include "utils.h"
 
 // Using macros to make debugging easier
 
@@ -11,9 +12,8 @@ int debug = 1;
 
 int main(int argc, char *argv[])
 {
-  // Use getopts to get the options
-  
   int n, b, i;
+  // Using strtol instead of atoi which is deprecated
   n = (int)strtol(argv[1], (char **)NULL, 10);
   b = (int)strtol(argv[2], (char **)NULL, 10);
 
@@ -22,8 +22,9 @@ int main(int argc, char *argv[])
   printf ("got n = %d and b = %d\n", n, b);
 
   double *y = malloc(sizeof(double) * n);
-  gen_matrix(n);
-
+  double *L = gen_matrix(n);
+  print_double_matrix(L);
+  
   // y is a vector of random values
   for (i = 0; i < n; i++)
     y[i] = drand48();
@@ -42,17 +43,9 @@ double * gen_matrix(int n) {
       idx = j*n + i;
       bigl[idx] = drand48(); // setting to a random double <0,1>
 
-      if (debug)
-	printf("%f\t", bigl[idx]);
-
-      // FIXME: this is never executed
-      if (i == j) {
-	if (debug)
-	  printf("set on the diagonal");
-	bigl[idx] += n * 1.0;
-      }
+      if (i == j)
+	bigl[idx] += n;
     }
-    printf("\n");
   }
   return bigl;
 }

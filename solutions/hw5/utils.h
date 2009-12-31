@@ -1,2 +1,2 @@
-void print_double_matrix(double *);
-void print_double_vector(double *);
+void print_double_matrix(double *, int);
+void print_double_vector(double *, int);

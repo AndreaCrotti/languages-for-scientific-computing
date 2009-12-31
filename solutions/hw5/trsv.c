@@ -23,11 +23,15 @@ int main(int argc, char *argv[])
 
   double *y = malloc(sizeof(double) * n);
   double *L = gen_matrix(n);
-  print_double_matrix(L);
+  printf("matrix L\n");
+  print_double_matrix(L, n);
   
   // y is a vector of random values
   for (i = 0; i < n; i++)
     y[i] = drand48();
+
+  printf("vector y\n");
+  print_double_vector(y, n);
   
   return 0;
 }

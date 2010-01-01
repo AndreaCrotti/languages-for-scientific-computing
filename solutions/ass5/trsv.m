@@ -4,8 +4,7 @@
 
 function x = TRSV(L, y, b, alg)
   ## partitioning
-  ## it's also square so we compute only once the half
-  ## TODO: check that the dimension is even
+  ## FIXME: you don't have to cut in a half actually
   half = length(L) / 2
   LTL = L(1:half, 1:half)
   LBL = L(1:half, half+1:length(L))
@@ -23,10 +22,10 @@ function passed = test_TRSV()
   for i = m1, m2, m3
     if TRSV(i, y, i, 1) != TRSV(i, y, i, 2)
       printf("something wrong happened")
-      return 0
+      return false
     endif
   endfor
-
+  return true
 endfunction
 
 ## check the accuracy of what we've computed plotting the different results

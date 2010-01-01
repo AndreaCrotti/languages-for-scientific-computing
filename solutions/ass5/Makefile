@@ -1,20 +1,20 @@
 # FIXME: this path must be usable also by the professor
 BLAS = $(HOME)/libs/c/blas
 CC = gcc
-DEBUG = -g
-CFLAGS = -Wall $(DEBUG)
+OPTIMIZE = -O3 # apple only
+CFLAGS = -Wall -g $(OPTIMIZE)
 LINK = -L$(BLAS) -lgoto -lg2c -lpthread
-SOURCES = andrea.c trsv.c utils.c
+SOURCES = andrea.c trsm.c utils.c
 TARFILE = andrea_crotti.tar.gz
 
-all : clean trsv andrea
+all : clean trsm andrea
 
 utils : utils.o
 	$(CC) $(CFLAGS) -c utils.c
 
-trsv : utils
-	$(CC) $(CFLAGS) $(LINK) -c trsv.c
-	$(CC) -o trsv trsv.o utils.o
+trsm : utils
+	$(CC) $(CFLAGS) $(LINK) -c trsm.c
+	$(CC) -o trsm trsm.o utils.o
 
 andrea :
 	$(CC) $(CFLAGS) -o andrea andrea.c

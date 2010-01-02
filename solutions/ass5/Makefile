@@ -1,8 +1,8 @@
-# FIXME: this path must be usable also by the professor
+# FIXME: this path should be autoconfigurable
 BLAS = $(HOME)/libs/c/blas
 CC = gcc
-OPTIMIZE = -O3 # apple only
-CFLAGS = -Wall -g $(OPTIMIZE)
+OPTIMIZE = -O3 
+CFLAGS = -Wall -g #$(OPTIMIZE)
 LINK = -L$(BLAS) -lgoto -lg2c -lpthread
 SOURCES = andrea.c trsm.c utils.c
 TARFILE = andrea_crotti.tar.gz
@@ -16,8 +16,9 @@ trsm : utils
 	$(CC) $(CFLAGS) $(LINK) -c trsm.c
 	$(CC) -o trsm trsm.o utils.o
 
-andrea :
-	$(CC) $(CFLAGS) -o andrea andrea.c
+andrea : utils
+	$(CC) $(CFLAGS) -c andrea.c
+	$(CC) -o andrea andrea.o utils.o
 
 clean:
 	rm -f *.o

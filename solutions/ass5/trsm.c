@@ -5,15 +5,13 @@
 
 #define TS ((double) clock())/CLOCKS_PER_SEC
 #define CYCLES (int) pow(10, 1000)
+#define DEBUG 1
 
-// Using macros to make debugging easier
 
 // Solve Lx=y using blas functions
 double *trsm(double *, double *, int, int);
 double *gen_matrix(int);
 double pow(double, double);
-
-int debug = 1;
 
 // this should be the definition from common_level2.h
 double *trsv(long, double *, long, double *, long, void *);
@@ -66,6 +64,7 @@ int main(int argc, char *argv[])
   free(y);
   free(L);
   //  free(x);
+
   return 0;
 }
 

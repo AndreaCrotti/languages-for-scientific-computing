@@ -69,23 +69,6 @@ int main(int argc, char *argv[])
 }
 
 
-// add a more general way to print a matrix
-
-double * gen_matrix(int n) {
-  int i, j, idx;
-  // we before set the seed for the random function to be called later
-  double *bigl = malloc(sizeof(double) * n * n);
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
-      idx = j*n + i;
-      bigl[idx] = drand48(); // setting to a random double <0,1>
-
-      if (i == j)
-	bigl[idx] += n;
-    }
-  }
-  return bigl;
-}
 
 
 double *trsm(double *L, double *y, int n, int b) {

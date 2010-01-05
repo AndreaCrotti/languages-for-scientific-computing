@@ -7,10 +7,8 @@
 #define CYCLES (int) pow(10, 1000)
 #define DEBUG 1
 
-
 // Solve Lx=y using blas functions
 double *trsm(double *, double *, int, int);
-double *gen_matrix(int);
 double pow(double, double);
 
 // this should be the definition from common_level2.h
@@ -35,7 +33,7 @@ int main(int argc, char *argv[])
 
   // Generating needed random data
   y = malloc(sizeof(double) * n);
-  L = gen_matrix(n);
+  L = gen_rand_matrix(n);
   
   // y is a vector of random values
   for (i = 0; i < n; i++)
@@ -67,8 +65,6 @@ int main(int argc, char *argv[])
 
   return 0;
 }
-
-
 
 
 double *trsm(double *L, double *y, int n, int b) {

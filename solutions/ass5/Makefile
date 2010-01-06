@@ -1,13 +1,11 @@
 # FIXME: this path should be autoconfigurable
-BLAS = $(HOME)/libs/c/blas
+BLAS = $(HOME)/libs/c/GotoBLAS
 CC = gcc
 OPTIMIZE = -O0
 CFLAGS = -Wall -g #$(OPTIMIZE)
-LINK = -L$(BLAS) -lgoto -lg2c -lpthread
+LINK = -L$(BLAS) -lgoto -lg2c -lm
 SOURCES = andrea.c trsm.c test.c output.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
-
-.PHONY : all
 
 all : clean trsm andrea test
 

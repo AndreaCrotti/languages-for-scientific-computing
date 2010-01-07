@@ -87,9 +87,12 @@ double *trsm(double *L, double *y, int n, int b) {
   char *diag = "n";
   int order = n;
   int incx = 1;
+  // copy y vector to x, y should be untouched, right?
+  memcpy(x, y, sizeof(double) * n);
 
   dtrsv_(up_lo, trans, diag, &order, L, &n, x, &incx);
   return x;
-  // we must print when computed
+  // ||Lx - y|| = 0 if it's correct
   // n, ||Lx − y||, and the execution time for TRSV
+  // it can't be 0 given that we work with floating point but it should be very close.
 }

@@ -4,7 +4,7 @@ CC = gcc
 OPTIMIZE = -O0
 CFLAGS = -Wall -g #$(OPTIMIZE)
 LINK = -L$(BLAS) -lgoto -lg2c -lm
-SOURCES = andrea.c trsm.c test.c output.m utils.c utils.h Makefile
+SOURCES = andrea.c trsm.c trsv.m test.c output.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
 
 all : clean trsm andrea test

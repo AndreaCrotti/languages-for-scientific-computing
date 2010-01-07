@@ -5,13 +5,13 @@
 #include "utils.h"
 
 #define TS ((double) clock())/CLOCKS_PER_SEC
-#define CYCLES (int) pow(10, 1000)
+#define CYCLES (long) pow(10, 1000)
 #define DEBUG 1
 
 // TODO: compile BLAS first
 
 // Solve Lx=y using blas functions
-double *trsm(double *, double *, int, int);
+double *wrap_trsv(double *, double *, int, int);
 double pow(double, double);
 
 // this should be the definition from common_level2.h
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {
   int n, b;
   if (argc != 3) {
-    printf("usage: ./trsm <n> <b>\n");
+    printf("usage: ./trsv <n> <b>\n");
     return(-1);
   }
   // Using strtol instead of atoi which is deprecated
@@ -40,45 +40,48 @@ int main(int argc, char *argv[])
 void run(int n, int b) {
   int i;
   double *L, *y, *x;
-  double ctime, tot_time;
   // initialization of ithe seed is done once for all
   srand48( (unsigned)time((time_t *) NULL )); 
 
   // Generating needed random data
   y = malloc(sizeof(double) * n);
-  L = gen_rand_matrix(n);
+  L = gen_rand_tril(n);
   
   // y is a vector of random values
   for (i = 0; i < n; i++)
     y[i] = drand48();
 
+  printf("matrix L:\n");
+  print_double_matrix(L, n);
+  
+  printf("vector y:\n");
+  print_double_vector(y, n);
+
   // compute the result and time the execution
+#ifdef TIMING
+  double ctime, tot_time;
   ctime = TS;
   for (i = 0; i < CYCLES; i++) {
     // not right, every time reassign everything
-    x = trsm(L, y, n , b);
-    free(x);
+    wrap_trsv(L, y, n , b);
   }
-  // we only need the total time not the peak
   tot_time = TS - ctime;
+  // FIXME: error in string formatting
+  printf("computing %l times took %l seconds \n", CYCLES, (long) tot_time);
+#endif
 
-  printf("matrix L\n");
-  print_double_matrix(L, n);
-  
-  printf("vector y\n");
-  print_double_vector(y, n);
-
-  printf("resulting vector x, %d computations took %.4f seconds \n", CYCLES, tot_time);
+  printf("resulting vector x:\n");
+  x = wrap_trsv(L, y, n, b);
   print_double_vector(x, n);
 
   // finally cleaning the memory
   free(y);
   free(L);
-  //  free(x);
+  free(x);
 }
 
 
-double *trsm(double *L, double *y, int n, int b) {
+double *wrap_trsv(double *L, double *y, int n, int b) {
   double *x = (double *) malloc(sizeof(double) * n);
   
   // prepare the arguments to give to the dtrsv_ function

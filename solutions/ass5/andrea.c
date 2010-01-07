@@ -8,7 +8,6 @@
 
 // To test my result print them to file and then load the results in octave
 
-double *gen_L(int);
 double *my_trsv(double *, double *, int);
 
 int main(int argc, char *argv[])
@@ -19,7 +18,7 @@ int main(int argc, char *argv[])
   double *L, *y, *x;
   
   printf("L:\n");
-  L = gen_L(LEN);
+  L = gen_rand_tril(LEN);
   print_double_matrix(L, LEN);
   
   // Generating needed random data
@@ -42,26 +41,6 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-// must be equivalent to tri(rand(n) + n * eye(n))
-double *gen_L(int len) {
-  int i, j, pos;
-  // using calloc  set it to 0 automatically
-  double *L = (double *) calloc(len*len, sizeof(double));
-  
-  for (i = 0; i < len; i++) {
-    for (j = 0; j <= i; j++) {
-      pos = i*len + j;
-      if (DEBUG)
-	printf("i, j, pos = %d, %d, %d\n", i, j, pos);
-
-      L[pos] = drand48();
-      if (i == j)
-	L[pos] += len;
-
-    }
-  }
-  return L;
-}
 
 double *my_trsv(double *L, double *y, int len) {
   int i, j, before;

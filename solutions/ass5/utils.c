@@ -23,6 +23,24 @@ void print_double_vector(double *vector, int len) {
   printf("\n");
 }
 
+// must be equivalent to tri(rand(n) + n * eye(n))
+double *gen_rand_tril(int len) {
+  int i, j, pos;
+  // using calloc  set it to 0 automatically, is not really necessary
+  double *L = (double *) calloc(len*len, sizeof(double));
+  
+  for (i = 0; i < len; i++) {
+    for (j = 0; j <= i; j++) {
+      pos = i*len + j;
+      L[pos] = drand48();
+      if (i == j)
+	L[pos] += len;
+
+    }
+  }
+  return L;
+}
+
 double *gen_rand_matrix(int n) {
   int i, j, idx;
   // we before set the seed for the random function to be called later

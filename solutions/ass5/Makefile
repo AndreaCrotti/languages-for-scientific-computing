@@ -26,9 +26,8 @@ test : utils
 	$(CC) $(CFLAGS) -c test.c
 	$(CC) -o test test.o utils.o
 
-clean:
+clean :
 	rm -f *.o
-
 
 # do some checking
 tar : 

@@ -1,8 +1,9 @@
+#define TS ((double) clock())/CLOCKS_PER_SEC
+
 void print_double_matrix(double *, int);
 
 void print_double_vector(double *, int);
 
-double *gen_rand_matrix(int);
 double *gen_rand_tril(int);
 
 // tries to write to a .m file the square matrix given

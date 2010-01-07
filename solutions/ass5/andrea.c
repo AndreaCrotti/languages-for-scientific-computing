@@ -3,7 +3,6 @@
 #include <time.h>
 #include "utils.h"
 
-#define DEBUG 0
 #define LEN 10
 
 // To test my result print them to file and then load the results in octave
@@ -12,6 +11,34 @@ double *my_trsv(double *, double *, int);
 
 int main(int argc, char *argv[])
 {
+  // for lazyness assume that the arguments are passed correctly
+  int n;
+  double *L;
+  if (argc == 2) {
+    // In this case execute once and return execution time
+    n = (int)strtol(argv[1], (char **)NULL, 10);
+    L = gen_rand_tril(n);
+    // a generic function timer should take the function pointer as argument
+    
+  }
+  
+  else if (argc == 5) {
+    int l, r, s, sw;
+    l = (int)strtol(argv[1], (char **)NULL, 10);
+    r = (int)strtol(argv[2], (char **)NULL, 10);
+    s = (int)strtol(argv[3], (char **)NULL, 10);
+    sw = (int)strtol(argv[4], (char **)NULL, 10);
+    
+    if (sw == 0) {
+      //producing the plot
+    }
+    if (sw == 1) {
+      // producing the 2 vectors
+    }
+  }
+
+  // getting options from the command line
+
   int i;
   // initialization of ithe seed is done once for all
   srand48( (unsigned)time((time_t *) NULL )); 

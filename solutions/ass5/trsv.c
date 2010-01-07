@@ -4,7 +4,6 @@
 #include <time.h> // for timing the execution
 #include "utils.h"
 
-#define TS ((double) clock())/CLOCKS_PER_SEC
 #define CYCLES (long) pow(10, 1000)
 #define DEBUG 1
 
@@ -85,11 +84,11 @@ double *wrap_trsv(double *L, double *y, int n, int b) {
   double *x = (double *) malloc(sizeof(double) * n);
   
   // prepare the arguments to give to the dtrsv_ function
-  char *up_lo = "l";
-  char *trans = "T";
-  char *diag = "n";
-  int order = n;
-  int incx = 1;
+  /* char *up_lo = "l"; */
+  /* char *trans = "T"; */
+  /* char *diag = "n"; */
+  /* int order = n; */
+  /* int incx = 1; */
   // copy y vector to x, y should be untouched, right?
   memcpy(x, y, sizeof(double) * n);
 

@@ -23,7 +23,7 @@ void print_double_vector(double *vector, int len) {
   printf("\n");
 }
 
-// must be equivalent to tri(rand(n) + n * eye(n))
+// generates a matrix equivalent to tril(rand(n) + n * eye(n))
 double *gen_rand_tril(int len) {
   int i, j, pos;
   // using calloc  set it to 0 automatically, is not really necessary
@@ -35,26 +35,9 @@ double *gen_rand_tril(int len) {
       L[pos] = drand48();
       if (i == j)
 	L[pos] += len;
-
     }
   }
   return L;
-}
-
-double *gen_rand_matrix(int n) {
-  int i, j, idx;
-  // we before set the seed for the random function to be called later
-  double *bigl = malloc(sizeof(double) * n * n);
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
-      idx = i*n + j;
-      bigl[idx] = drand48(); // setting to a random double <0,1>
-
-      if (i == j)
-	bigl[idx] += n;
-    }
-  }
-  return bigl;
 }
 
 // tries to write to a .m file the square matrix given
@@ -84,7 +67,7 @@ int write_to_m(double *matrix, int len, char *filename) {
 // creates a random matrix and writes it to filename
 int test_write_to_m(int len, char *filename) {
   int ret;
-  double *test_m = gen_rand_matrix(len);
+  double *test_m = gen_rand_tril(len);
   ret = write_to_m(test_m, len, filename);
   return ret;
 }

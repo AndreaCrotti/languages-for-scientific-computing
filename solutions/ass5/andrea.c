@@ -11,12 +11,11 @@ double *my_trsv(double *, double *, int);
 
 int main(int argc, char *argv[])
 {
-  // getting options from the command line
-  // for lazyness assume that the arguments are passed correctly
+  // for lazyness we'll assume that the arguments are passed correctly
   int n, i, len;
   double ctime, tot_time;
   double *L, *x, *y;
-  // for random generator
+  // seeding the random generator
   srand48( (unsigned)time((time_t *) NULL )); 
 
   if (argc == 2) {
@@ -36,14 +35,14 @@ int main(int argc, char *argv[])
     s = (int)strtol(argv[3], (char **)NULL, 10);
     sw = (int)strtol(argv[4], (char **)NULL, 10);
     
-    struct timing times[n];
+    struct timing times[(int)((r - l) / s)];
     // (double *) malloc(sizeof(double) * n);
 
     // a double initialization and increment
     // not really elegant
     printf("l = %d, r = %d, s = %d\n", l, r, s);
-    for  (i = 0, len = l; len <= r; i++, len += s) {
-      printf("len = %d", len);
+    i = 0;
+    for  (len = l; len <= r; len += s) {
       // everytime generate a new matrix
       L = gen_rand_tril(len);
       y = gen_rand_vector(len);
@@ -56,6 +55,8 @@ int main(int argc, char *argv[])
       times[i].time = tot_time;
       
       print_timing(times[i]);
+      i++;
+
       free(L); free(y); free(x);
     }
 
@@ -65,6 +66,10 @@ int main(int argc, char *argv[])
     if (sw == 1) {
       // producing the 2 vectors
     }
+  }
+  else {
+    printf("usage:\n./andrea n\nandrea l r s 0|1\n");
+    return(-1);
   }
   return 0;
 }

@@ -13,11 +13,9 @@
 double *wrap_trsv(double *, double *, int, int);
 double pow(double, double);
 
-// this should be the definition from common_level2.h
-double *trsv(long, double *, long, double *, long, void *);
-
 void run(int, int);
 
+// definition from the fortran interface (see _)
 int dtrsv_(char *, char *, char *, int *, double *, int *, double *, int *);
 
 int main(int argc, char *argv[])

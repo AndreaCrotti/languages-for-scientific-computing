@@ -15,12 +15,27 @@ void print_double_matrix(double *matrix, int dim) {
   }
 }
 
+void print_timing(struct timing time) {
+  printf("for size %d it took %f", time.size, time.time);
+}
+
 void print_double_vector(double *vector, int len) {
   int i;
   
   for (i = 0; i < len; i++)
     printf("%.3f\t", vector[i]);
   printf("\n");
+}
+
+double *gen_rand_vector (int len) {
+  int i;
+  double *y = malloc(sizeof(double) * len);
+  
+  // y is a vector of random values
+  for (i = 0; i < len; i++)
+    y[i] = drand48();
+
+  return y;
 }
 
 // generates a matrix equivalent to tril(rand(n) + n * eye(n))

@@ -45,4 +45,10 @@
 
 
 * C language
+
+* FLAME
+  Is an API which to automatically generate algorithms, symbolic generations.
+  It's a way of bridging the step from symbolic mathematical thing to algorithm.
   
+** Example, inverting a matrix
+   L <- L^(-1)

@@ -90,7 +90,7 @@ double *trsm(double *L, double *y, int n, int b) {
   // copy y vector to x, y should be untouched, right?
   memcpy(x, y, sizeof(double) * n);
 
-  dtrsv_(up_lo, trans, diag, &order, L, &n, x, &incx);
+  //dtrsv_(up_lo, trans, diag, &order, L, &n, x, &incx);
   return x;
   // ||Lx - y|| = 0 if it's correct
   // n, ||Lx − y||, and the execution time for TRSV

@@ -1,8 +1,10 @@
 # FIXME: this path should be autoconfigurable
 BLAS = $(HOME)/libs/c/GotoBLAS
 CC = gcc
-OPTIMIZE = -O0
-CFLAGS = -Wall -g #$(OPTIMIZE)
+OPTIMIZE = -O0 # disable optimization
+# Adding some timing / profiling targets??
+PROFILE = -pg
+CFLAGS = -Wall -g $(OPTIMIZE)
 LINK = -L$(BLAS) -lgoto -lg2c -lm
 SOURCES = andrea.c trsm.c trsv.m test.c output.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
@@ -27,5 +29,6 @@ test : utils
 clean:
 	rm -f *.o
 
+# do some checking
 tar : 
 	tar -cvzf $(TARFILE) $(SOURCES)

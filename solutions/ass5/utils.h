@@ -1,13 +1,5 @@
 #define TS ((double) clock())/CLOCKS_PER_SEC
 
-struct timing
-{
-  int size;
-  double time;
-};
-
-
-void print_timing(struct timing);
 void print_double_matrix(double *, int);
 
 void print_double_vector(double *, int);

@@ -15,10 +15,6 @@ void print_double_matrix(double *matrix, int dim) {
   }
 }
 
-void print_timing(struct timing time) {
-  printf("for size %d it took %f\n", time.size, time.time);
-}
-
 void print_double_vector(double *vector, int len) {
   int i;
   

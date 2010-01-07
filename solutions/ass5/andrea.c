@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #define LEN 10
+#define IDX_TO_CONT(i, l, s) ((i+1)*s + l)
 
 // To test my result print them to file and then load the results in octave
 
@@ -34,28 +35,22 @@ int main(int argc, char *argv[])
     r = (int)strtol(argv[2], (char **)NULL, 10);
     s = (int)strtol(argv[3], (char **)NULL, 10);
     sw = (int)strtol(argv[4], (char **)NULL, 10);
-    
-    struct timing times[(int)((r - l) / s)];
-    // (double *) malloc(sizeof(double) * n);
 
-    // a double initialization and increment
-    // not really elegant
-    printf("l = %d, r = %d, s = %d\n", l, r, s);
-    i = 0;
-    for  (len = l; len <= r; len += s) {
-      // everytime generate a new matrix
-      L = gen_rand_tril(len);
-      y = gen_rand_vector(len);
+    n = (int)((r - l) / s);
+    
+    double times[n]; // this remains in the stack
+
+    for (i = 0; i < n; i++ ) {
+      len = IDX_TO_CONT(i, l, s);
+      L = gen_rand_tril(i);
+      y = gen_rand_vector(i);
 
       ctime = TS;
-      x = my_trsv(L, y, len);
-      tot_time = TS - ctime;
-
-      times[i].size = len;
-      times[i].time = tot_time;
-      
-      print_timing(times[i]);
-      i++;
+      x = my_trsv(L, y, IDX_TO_CONT(i, l, s));
+      //tot_time = TS - ctime;
+      times[i] = TS - ctime;
+            
+      printf("time spent for len %d = %f\n", len, times[i]);
 
       free(L); free(y); free(x);
     }

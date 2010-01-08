@@ -11,7 +11,7 @@ void print_double_matrix(double *matrix, int dim) {
   for (i = 0; i < dim; i++) {
     for (j = 0; j < dim; j++)
       // FIXME set a certain amount of numbers
-      printf("%.4f\t", matrix[i*dim + j]);
+      printf("%.6f\t", matrix[i*dim + j]);
     printf("\n");
   }
 }
@@ -20,7 +20,7 @@ void print_double_vector(double *vector, int len) {
   int i;
   
   for (i = 0; i < len; i++)
-    printf("%.4f\t", vector[i]);
+    printf("%.6f\t", vector[i]);
   printf("\n");
 }
 
@@ -67,7 +67,7 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
   for (i = 0; i < len; i++) {
     fprintf(output, "[");
     for (j = 0; j < len; j++) {
-      fprintf(output, "%.4f ", matrix[i*len + j]);
+      fprintf(output, "%.6f ", matrix[i*len + j]);
     }
     fprintf(output, "]\n");
   }
@@ -76,23 +76,34 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
   return 1;
 }
 
-char *vector_to_matlab(double *vector, int len) {
-  // 6 is given by 0.<4 digits of precision>, try to abstract this
+/* // not aborting anymore but crap in the output */
+/* char *vector_to_matlab(double *vector, int len) { */
+/*   // 6 is given by 0.<4 digits of precision>, try to abstract this */
+/*   int i; */
+/*   int totlen = 4 + len*6 + (len - 1); */
+/*   char *result = (char *) malloc(sizeof(char) * totlen); */
+/*   // necessary to make it end with \0? */
+/*   strcat(result, "[\0"); */
+/*   char *temp = malloc(sizeof(char) * 6); */
+/*   for (i = 0; i < len; i++) { */
+/*     sprintf(temp, "%.6f", vector[i]); */
+/*     strcat(result, temp); */
+/*     //interleaving a space */
+/*     if (i < (len -1)) */
+/*       strcat(result, " \0"); */
+/*   } */
+/*   strcat(result, " ]\0"); */
+/*   free(temp); */
+/*   return result; */
+/* } */
+
+void print_vector_to_matlab(double *vector, int len) {
   int i;
-  int totlen = 4 + len*6 + (len - 1);
-  char *result = (char *) malloc(sizeof(char) * totlen);
-  // necessary to make it end with \0?
-  strcat(result, "[\0");
+  printf("[ ");
   for (i = 0; i < len; i++) {
-    char temp[6];
-    sprintf(temp, "%.4f", vector[i]);
-    strcat(result, temp);
-    //interleaving a space
-    if (i < (len -1))
-      strcat(result, " \0");
+    printf("%.6f ", vector[i]);
   }
-  strcat(result, " ]\0");
-  return result;
+  printf("]\n");
 }
 
 // creates a random matrix and writes it to filename

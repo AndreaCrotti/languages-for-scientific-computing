@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
       x = my_trsv(L, y, len);
       times[i] = TS - ctime;
             
-      printf("time spent for len %d = %f\n", len, times[i]);
+      //printf("time spent for len %d = %.6f\n", len, times[i]);
 
       free(L); free(y); free(x);
     }
@@ -64,14 +64,11 @@ int main(int argc, char *argv[])
       // producing the 2 vectors
       char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
       char tim[] = "andreatimes = ";
-      char *vec = vector_to_matlab(times, n);
       // and then add both to it
 
       printf(ticks, l, s, r);
       printf(tim);
-      printf(vec);
-
-      free(vec);
+      print_vector_to_matlab(times, n);
     }
     free(times);
   }

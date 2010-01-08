@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "utils.h"
 
 void print_double_matrix(double *matrix, int dim) {
@@ -10,7 +11,7 @@ void print_double_matrix(double *matrix, int dim) {
   for (i = 0; i < dim; i++) {
     for (j = 0; j < dim; j++)
       // FIXME set a certain amount of numbers
-      printf("%.3f\t", matrix[i*dim + j]);
+      printf("%.4f\t", matrix[i*dim + j]);
     printf("\n");
   }
 }
@@ -19,7 +20,7 @@ void print_double_vector(double *vector, int len) {
   int i;
   
   for (i = 0; i < len; i++)
-    printf("%.3f\t", vector[i]);
+    printf("%.4f\t", vector[i]);
   printf("\n");
 }
 
@@ -52,7 +53,7 @@ double *gen_rand_tril(int len) {
 }
 
 // tries to write to a .m file the square matrix given
-int write_to_m(double *matrix, int len, char *filename) {
+int matrix_to_matlab(double *matrix, int len, char *filename) {
   FILE *output = fopen(filename, "w");
   // Using fprintf or fwrite?
   // not able to open it
@@ -75,10 +76,29 @@ int write_to_m(double *matrix, int len, char *filename) {
   return 1;
 }
 
+char *vector_to_matlab(double *vector, int len) {
+  // 6 is given by 0.<4 digits of precision>, try to abstract this
+  int i;
+  int totlen = 4 + len*6 + (len - 1);
+  char *result = (char *) malloc(sizeof(char) * totlen);
+  // necessary to make it end with \0?
+  strcat(result, "[\0");
+  for (i = 0; i < len; i++) {
+    char temp[6];
+    sprintf(temp, "%.4f", vector[i]);
+    strcat(result, temp);
+    //interleaving a space
+    if (i < (len -1))
+      strcat(result, " \0");
+  }
+  strcat(result, " ]\0");
+  return result;
+}
+
 // creates a random matrix and writes it to filename
 int test_write_to_m(int len, char *filename) {
   int ret;
   double *test_m = gen_rand_tril(len);
-  ret = write_to_m(test_m, len, filename);
+  ret = matrix_to_matlab(test_m, len, filename);
   return ret;
 }

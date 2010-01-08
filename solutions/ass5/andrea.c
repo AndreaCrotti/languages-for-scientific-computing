@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "utils.h"
 
 #define LEN 10
@@ -9,6 +10,8 @@
 // To test my result print them to file and then load the results in octave
 
 double *my_trsv(double *, double *, int);
+int check_trsv(double *L, double *y, int len,
+	       double * (*trsv)(double *, double *, int));
 
 int main(int argc, char *argv[])
 {
@@ -38,16 +41,15 @@ int main(int argc, char *argv[])
 
     n = (int)((r - l) / s);
     
-    double times[n]; // this remains in the stack
+    double *times = malloc(sizeof(double) * n); // this remains in the stack
 
-    for (i = 0; i < n; i++ ) {
+    for ( i = 0; i < n; i++ ) {
       len = IDX_TO_CONT(i, l, s);
-      L = gen_rand_tril(i);
-      y = gen_rand_vector(i);
+      L = gen_rand_tril(len);
+      y = gen_rand_vector(len);
 
       ctime = TS;
-      x = my_trsv(L, y, IDX_TO_CONT(i, l, s));
-      //tot_time = TS - ctime;
+      x = my_trsv(L, y, len);
       times[i] = TS - ctime;
             
       printf("time spent for len %d = %f\n", len, times[i]);
@@ -60,7 +62,18 @@ int main(int argc, char *argv[])
     }
     if (sw == 1) {
       // producing the 2 vectors
+      char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
+      char tim[] = "andreatimes = ";
+      char *vec = vector_to_matlab(times, n);
+      // and then add both to it
+
+      printf(ticks, l, s, r);
+      printf(tim);
+      printf(vec);
+
+      free(vec);
     }
+    free(times);
   }
   else {
     printf("usage:\n./andrea n\nandrea l r s 0|1\n");
@@ -78,10 +91,19 @@ double *my_trsv(double *L, double *y, int len) {
   for (i = 0; i < len; i++) {
     before = 0;
     for (j = 0; j < i; j++) {
-      before += L[i*len + j]*x[j];
+      before += L[i*len + j] * x[j];
     }
     x[i] = (y[i] - before) / L[i*(len + 1)]; // equal to L[i][i]
   }
   // Finally use the norm2 to check if the result is close enough to 0
   return x;
+}
+
+// checking correctness of our algorithm
+int check_trsv(double *L, double *y, int len,
+	       double * (*trsv)(double *, double *, int)) {
+
+  double *x = malloc(sizeof(double) * len);
+  x = (*trsv) (L, y, len);
+  return 0;
 }

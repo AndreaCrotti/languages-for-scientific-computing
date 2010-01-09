@@ -10,6 +10,7 @@ function x = trsv(L, y, b, alg)
   req = len / b;
   ## this could be whatever, after I overwrite any value present
   x = 1:len
+  ## the condition on size(Ltl) is automatically fulfilled here 
   for idx = 0:req
     step = idx
     s = idx * b;
@@ -22,24 +23,48 @@ function x = trsv(L, y, b, alg)
     Lbl = L(s+1:len, 1:s)
     Lbr = L(s+1:len, s+1:len)
 
+    if (length(Ltl) == len)
+      return
+    endif
+
     ## but where do I instantiate x?
-    xt = x(1:s)
-    xb = x(s+1:len)
+    
+    xt = x(1:s)     
+    xb = x(s+1:len) 
+     		      
+    yt = y(1:s)     
+    yb = y(s+1:len) 
 
-    yt = y(1:s)
-    yb = y(s+1:len)
+    ##############################################
+    # L00 = Ltl					 #
+    # L10 = Lbl(1:b, :)				 #
+    # L20 = Lbl(b+1:rows(Lbl), :)		 #
+    # L11 = Lbr(1:b, 1:b)			 #
+    # L21 = Lbr(b+1:rows(Lbr), 1:b)		 #
+    # L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr)) #
+    ##############################################
 
-    L00 = Ltl
-    L10 = Lbl(
+    ## I don't need to compute all the possible submatrices
 
+    ## setting variables needed for both algorithms
+    L11 = Lbr(1:b, 1:b)
+    x1 = xb(1:b)
+    y1 = yb(1:b)
+    v = vec(y1)
     ## math part
     if alg == 1
-      y(1) = y(1) - L(1,0) * y(0)
-      x(1) = inverse(L(1,1)) * y(1)
+      L10 = Lbl(1:b, 1:columns(Lbl))
+      y0 = yt
+
+      y(1) = y1 - L10 * y0
+      x(1) = inverse(L11) * vec(y1)
     endif
     if alg == 2
-      x(1) = inverse(L(1,1)) * y(1)
-      y(2) = y(2) - L(2,1) * x(1)
+      L21 = Lbr(1:b, b+1:columns(Lbr))
+      y2 = yb(b+1:length(yb))
+      
+      x(1) = inverse(L11) * vec(y1)
+      y(2) = y2 - L21 * x1
     endif
     
   endfor
@@ -66,4 +91,4 @@ endfunction
 dim = 4
 y = 1:dim
 m1 = tril(rand(dim))
-TRSV(m1, y, 1, 0)
+trsv(m1, y, 1, 1)

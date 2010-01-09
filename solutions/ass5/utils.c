@@ -11,7 +11,7 @@ void print_double_matrix(double *matrix, int dim) {
   for (i = 0; i < dim; i++) {
     for (j = 0; j < dim; j++)
       // FIXME set a certain amount of numbers
-      printf("%.6f\t", matrix[i*dim + j]);
+      printf("%"PRECISION"\t", matrix[i*dim + j]);
     printf("\n");
   }
 }
@@ -20,7 +20,7 @@ void print_double_vector(double *vector, int len) {
   int i;
   
   for (i = 0; i < len; i++)
-    printf("%.6f\t", vector[i]);
+    printf("%"PRECISION"\t", vector[i]);
   printf("\n");
 }
 
@@ -67,13 +67,31 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
   for (i = 0; i < len; i++) {
     fprintf(output, "[");
     for (j = 0; j < len; j++) {
-      fprintf(output, "%.6f ", matrix[i*len + j]);
+      fprintf(output, "%"PRECISION" ", matrix[i*len + j]);
     }
     fprintf(output, "]\n");
   }
   fprintf(output, "]");
   fclose(output);
   return 1;
+}
+
+
+void print_vector_to_matlab(double *vector, int len) {
+  int i;
+  printf("[ ");
+  for (i = 0; i < len; i++) {
+    printf("%"PRECISION" ", vector[i]);
+  }
+  printf("]\n");
+}
+
+// creates a random matrix and writes it to filename
+int test_write_to_m(int len, char *filename) {
+  int ret;
+  double *test_m = gen_rand_tril(len);
+  ret = matrix_to_matlab(test_m, len, filename);
+  return ret;
 }
 
 /* // not aborting anymore but crap in the output */
@@ -86,7 +104,7 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
 /*   strcat(result, "[\0"); */
 /*   char *temp = malloc(sizeof(char) * 6); */
 /*   for (i = 0; i < len; i++) { */
-/*     sprintf(temp, "%.6f", vector[i]); */
+/*     sprintf(temp, "%"PRECISION"", vector[i]); */
 /*     strcat(result, temp); */
 /*     //interleaving a space */
 /*     if (i < (len -1)) */
@@ -96,20 +114,3 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
 /*   free(temp); */
 /*   return result; */
 /* } */
-
-void print_vector_to_matlab(double *vector, int len) {
-  int i;
-  printf("[ ");
-  for (i = 0; i < len; i++) {
-    printf("%.6f ", vector[i]);
-  }
-  printf("]\n");
-}
-
-// creates a random matrix and writes it to filename
-int test_write_to_m(int len, char *filename) {
-  int ret;
-  double *test_m = gen_rand_tril(len);
-  ret = matrix_to_matlab(test_m, len, filename);
-  return ret;
-}

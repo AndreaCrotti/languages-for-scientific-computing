@@ -1,5 +1,5 @@
 #define TS ((double) clock())/CLOCKS_PER_SEC
-#define PRECISION 4
+#define PRECISION ".6f"
 
 void print_double_matrix(double *, int);
 void print_double_vector(double *, int);

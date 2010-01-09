@@ -77,13 +77,13 @@ int matrix_to_matlab(double *matrix, int len, char *filename) {
 }
 
 
-void print_vector_to_matlab(double *vector, int len) {
+void print_vector_to_matlab(FILE *output, double *vector, int len) {
   int i;
-  printf("[ ");
+  fprintf(output, "[ ");
   for (i = 0; i < len; i++) {
-    printf("%"PRECISION" ", vector[i]);
+    fprintf(output, "%"PRECISION" ", vector[i]);
   }
-  printf("]\n");
+  fprintf(output, "]\n");
 }
 
 // creates a random matrix and writes it to filename
@@ -93,24 +93,3 @@ int test_write_to_m(int len, char *filename) {
   ret = matrix_to_matlab(test_m, len, filename);
   return ret;
 }
-
-/* // not aborting anymore but crap in the output */
-/* char *vector_to_matlab(double *vector, int len) { */
-/*   // 6 is given by 0.<4 digits of precision>, try to abstract this */
-/*   int i; */
-/*   int totlen = 4 + len*6 + (len - 1); */
-/*   char *result = (char *) malloc(sizeof(char) * totlen); */
-/*   // necessary to make it end with \0? */
-/*   strcat(result, "[\0"); */
-/*   char *temp = malloc(sizeof(char) * 6); */
-/*   for (i = 0; i < len; i++) { */
-/*     sprintf(temp, "%"PRECISION"", vector[i]); */
-/*     strcat(result, temp); */
-/*     //interleaving a space */
-/*     if (i < (len -1)) */
-/*       strcat(result, " \0"); */
-/*   } */
-/*   strcat(result, " ]\0"); */
-/*   free(temp); */
-/*   return result; */
-/* } */

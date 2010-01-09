@@ -5,7 +5,10 @@
 #include "utils.h"
 
 #define LEN 10
+// macro useful to pass from array index to position
 #define IDX_TO_CONT(i, l, s) ((i+1)*s + l)
+
+#define OUTPUT_FILE "output.m"
 
 // To test my result print them to file and then load the results in octave
 
@@ -56,6 +59,9 @@ int main(int argc, char *argv[])
 
       free(L); free(y); free(x);
     }
+    printf("writing output to file %s\n", OUTPUT_FILE);
+
+    FILE *output = fopen(OUTPUT_FILE, "w");
 
     if (sw == 0) {
       //producing the plot
@@ -65,11 +71,12 @@ int main(int argc, char *argv[])
       char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
       char tim[] = "andreatimes = ";
       // and then add both to it
-
-      printf(ticks, l, s, r);
-      printf(tim);
-      print_vector_to_matlab(times, n);
+      fprintf(output, ticks, l, s, r);
+      fprintf(output, tim);
+      print_vector_to_matlab(output, times, n);
     }
+
+    fclose(output);
     free(times);
   }
   else {

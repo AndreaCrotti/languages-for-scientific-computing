@@ -35,35 +35,25 @@ function x = trsv(L, y, b, alg)
     yt = y(1:s)     
     yb = y(s+1:len) 
 
-    ##############################################
-    # L00 = Ltl					 #
-    # L10 = Lbl(1:b, :)				 #
-    # L20 = Lbl(b+1:rows(Lbl), :)		 #
-    # L11 = Lbr(1:b, 1:b)			 #
-    # L21 = Lbr(b+1:rows(Lbr), 1:b)		 #
-    # L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr)) #
-    ##############################################
-
-    ## I don't need to compute all the possible submatrices
-
     ## setting variables needed for both algorithms
     L11 = Lbr(1:b, 1:b)
     x1 = xb(1:b)
     y1 = yb(1:b)
-    v = vec(y1)
-    ## math part
+
+    ## math part, choosing which algorithm to execute
     if alg == 1
       L10 = Lbl(1:b, 1:columns(Lbl))
       y0 = yt
 
       y(1) = y1 - L10 * y0
-      x(1) = inverse(L11) * vec(y1)
+      x(1) = inverse(L11) * y1
     endif
+
     if alg == 2
       L21 = Lbr(1:b, b+1:columns(Lbr))
       y2 = yb(b+1:length(yb))
       
-      x(1) = inverse(L11) * vec(y1)
+      x(1) = inverse(L11) * y1
       y(2) = y2 - L21 * x1
     endif
     

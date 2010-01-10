@@ -86,10 +86,12 @@ void print_vector_to_matlab(FILE *output, double *vector, int len) {
   fprintf(output, "]\n");
 }
 
-// creates a random matrix and writes it to filename
-int test_write_to_m(int len, char *filename) {
-  int ret;
-  double *test_m = gen_rand_tril(len);
-  ret = matrix_to_matlab(test_m, len, filename);
-  return ret;
-}
+/* // generates an auto plotting octave file */
+/* void print_plot_generator(FILE *graph, char *stats_file, graph_options *options) { */
+/*   char *env = "#!/usr/bin/env octave"; */
+  
+
+/*   // starting to print out stuff */
+/*   fprintf(graph, env); */
+  
+/* } */

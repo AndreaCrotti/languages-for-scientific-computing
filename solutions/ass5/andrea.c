@@ -9,6 +9,7 @@
 #define IDX_TO_CONT(i, l, s) ((i+1)*s + l)
 
 #define OUTPUT_FILE "output.m"
+#define OUTPUT_GRAPH "graph.m"
 
 // To test my result print them to file and then load the results in octave
 
@@ -42,12 +43,13 @@ int main(int argc, char *argv[])
     s = (int)strtol(argv[3], (char **)NULL, 10);
     sw = (int)strtol(argv[4], (char **)NULL, 10);
 
-    n = (int)((r - l) / s);
+    n = ((r - l) / s) + 1;
     
     double *times = malloc(sizeof(double) * n); // this remains in the stack
 
     for ( i = 0; i < n; i++ ) {
       len = IDX_TO_CONT(i, l, s);
+
       L = gen_rand_tril(len);
       y = gen_rand_vector(len);
 
@@ -61,22 +63,37 @@ int main(int argc, char *argv[])
     }
     printf("writing output to file %s\n", OUTPUT_FILE);
 
-    FILE *output = fopen(OUTPUT_FILE, "w");
+    // this output file is always written
+    if ((sw == 0) || (sw == 1)) {
+      FILE *output = fopen(OUTPUT_FILE, "w");
 
-    if (sw == 0) {
-      //producing the plot
-    }
-    if (sw == 1) {
       // producing the 2 vectors
       char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
-      char tim[] = "andreatimes = ";
       // and then add both to it
       fprintf(output, ticks, l, s, r);
-      fprintf(output, tim);
+      fprintf(output, "andreatimes = ");
       print_vector_to_matlab(output, times, n);
+
+      fclose(output);
     }
 
-    fclose(output);
+    if (sw == 0) {
+      //producing the plot, always using the data collected
+      printf("writing graph generator to %s\n", OUTPUT_GRAPH);
+      FILE *graph = fopen(OUTPUT_GRAPH, "w");
+
+      // only works with octave
+      fprintf(graph, "#!/usr/bin/octave --persist\n");
+      // now I get the informations from the other file always generated
+      fprintf(graph, "source(\""OUTPUT_FILE"\");\n");
+      fprintf(graph, "title('time vs matrix dimension');\n");
+      fprintf(graph, "xlabel('dimension');\n");
+      fprintf(graph, "ylabel('time');\n");
+      fprintf(graph, "plot(andreaticks, andreatimes);\n");
+      
+      fclose(graph);
+    }
+
     free(times);
   }
   else {

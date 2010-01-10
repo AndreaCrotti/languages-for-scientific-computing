@@ -28,7 +28,6 @@ function x = trsv(L, y, b, alg)
     endif
 
     ## but where do I instantiate x?
-    
     xt = x(1:s)     
     xb = x(s+1:len) 
      		      
@@ -39,13 +38,14 @@ function x = trsv(L, y, b, alg)
     L11 = Lbr(1:b, 1:b)
     x1 = xb(1:b)
     y1 = yb(1:b)
+    ## FIXME: the inverse when B is large should not be used
 
     ## math part, choosing which algorithm to execute
     if alg == 1
       L10 = Lbl(1:b, 1:columns(Lbl))
       y0 = yt
 
-      y(1) = y1 - L10 * y0
+      y(1) = y1 - L10 * x(0)
       x(1) = inverse(L11) * y1
     endif
 

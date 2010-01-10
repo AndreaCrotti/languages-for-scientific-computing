@@ -85,13 +85,3 @@ void print_vector_to_matlab(FILE *output, double *vector, int len) {
   }
   fprintf(output, "]\n");
 }
-
-/* // generates an auto plotting octave file */
-/* void print_plot_generator(FILE *graph, char *stats_file, graph_options *options) { */
-/*   char *env = "#!/usr/bin/env octave"; */
-  
-
-/*   // starting to print out stuff */
-/*   fprintf(graph, env); */
-  
-/* } */

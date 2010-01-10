@@ -6,7 +6,7 @@ OPTIMIZE = -O0 # disable optimization
 PROFILE = -pg
 CFLAGS = -Wall -g $(OPTIMIZE)
 LINK = -L$(BLAS) -lgoto -lg2c -lm
-SOURCES = andrea.c trsv.c trsv.m test.c output.m utils.c utils.h Makefile
+SOURCES = andrea.c trsv.c trsv.m test.c output.m graph.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
 
 all : clean trsv andrea test

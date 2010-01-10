@@ -3,9 +3,8 @@ BLAS = $(HOME)/libs/c/GotoBLAS
 CC = gcc
 OPTIMIZE = -O0 # disable optimization
 # Adding some timing / profiling targets??
-PROFILE = -pg
 CFLAGS = -Wall -g $(OPTIMIZE)
-LINK = -L$(BLAS) -lgoto -lg2c -lm
+LINK = -L$(BLAS) -lblas -lm
 SOURCES = andrea.c trsv.c trsv.m test.c output.m graph.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
 
@@ -29,6 +28,6 @@ andrea : utils
 clean :
 	rm -f *.o
 
-# do some checking
-tar : 
+# In this way it only tar up if everything compiles fine
+tar : 	all
 	tar -cvzf $(TARFILE) $(SOURCES)

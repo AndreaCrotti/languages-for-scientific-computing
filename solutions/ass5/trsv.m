@@ -38,6 +38,7 @@ function x = trsv(L, y, b, alg)
     L11 = Lbr(1:b, 1:b)
     x1 = xb(1:b)
     y1 = yb(1:b)
+    x0 = xt
     ## FIXME: the inverse when B is large should not be used
 
     ## math part, choosing which algorithm to execute
@@ -45,16 +46,30 @@ function x = trsv(L, y, b, alg)
       L10 = Lbl(1:b, 1:columns(Lbl))
       y0 = yt
 
-      y(1) = y1 - L10 * x(0)
-      x(1) = inverse(L11) * y1
+      printf("x0 = %d and L10 = %d")
+      y(1) = y1 - L10 * vec(x0)
+
+      ## when we have a matrix instead of inverting we call recursively trsv
+      if (b > 1)
+	x(1) = trsv(L11, y1, b, alg)
+      else
+	x(1) = L11^(-1) * y1
+      endif
+
     endif
 
-    if alg == 2
+    if (alg == 2)
       L21 = Lbr(1:b, b+1:columns(Lbr))
       y2 = yb(b+1:length(yb))
       
-      x(1) = inverse(L11) * y1
-      y(2) = y2 - L21 * x1
+      if (b > 1)
+	x(1) = trsv(L11, y1, b, alg)
+      else
+	x(1) = L11^(-1) * y1
+      endif
+
+      y(2) = y2 - L21 * vec(x1)
+
     endif
     
   endfor
@@ -78,7 +93,12 @@ function passed = test_TRSV()
 endfunction
 
 ## check the accuracy of what we've computed plotting the different results
-dim = 4
-y = 1:dim
-m1 = tril(rand(dim))
-trsv(m1, y, 1, 1)
+#dim = 4				
+#y = 1:dim
+#m1 = tril(rand(dim))
+#trsv(m1, y, 1, 1)
+### 
+
+simple = [[1 0]; [1 1]]     
+y1 = [1 1]		      
+

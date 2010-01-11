@@ -39,7 +39,7 @@ function x = trsv(L, y, b, alg)
     y1 = yb(1:b);
     y2 = yb(b+1:length(yb));
     
-    ## TODO: pass to unblocked algorithm in case b == 1
+    ## TODO: pass to unblocked algorithm?
     ## math part, choosing which algorithm to execute
     if (alg == 1)
       y1 = y1 - L10 * x0;
@@ -62,6 +62,7 @@ function x = trsv(L, y, b, alg)
       y2
       L21
       x1
+      ## FIXME: Still an error here of nonconformant operators
       y2 = y2 - L21 * x1;
 
     endif
@@ -81,20 +82,16 @@ function x = trsv(L, y, b, alg)
   x = xt;
 endfunction
 
-
-
-## get the accuracy and print it nicely
-## x = problem size
-## y = accuracy (different lines for different problem)
-
 function acc = accuracy(L, y, b, alg)
-  L
-  y
-  x = trsv(L, y, b, alg)
+  x = trsv(L, y, b, alg);
   acc = norm(L * x - y);
+  if (acc > 1)
+    printf("length(L) = %d and acc = %f\n", length(L), acc);
+  endif
+    
 endfunction
 
-function passed = test_trsv(dim)
+function test_trsv(dim, alg)
   ## Testing my function, returns true if satisfied
   ## matrices to test
   m1 = tril(rand(dim));
@@ -102,30 +99,32 @@ function passed = test_trsv(dim)
   m3 = tril(randn(dim));
   y = randn(dim, 1);
 
-  accuracy(m1, y, 1, 1)
-  accuracy(m2, y, 1, 1)
+  accuracy(m1, y, 1, alg)
+  accuracy(m2, y, 1, alg)
 
 endfunction
 
-function gen_plot(b)
-  idx = 1
-  range = 10:10:100
-  for d = range
-    mat = tril(rand(d))
-    ## generate also a random vector instead
-    y = 1:d
-    acc1(idx) = accuracy(mat, y, 1, 1)
-    acc2(idx) = accuracy(mat, y, 1, 1)
-  endfor
-
-  # only one figure or more plots?
+## get the accuracy of the algorithm and plot it nicely
+## x = problem size
+## y = accuracy (different lines for different problem)
+function gen_plot(range, acc1, acc2)
   xlabel('dimension');
   ylabel('accuracy');
+  ## why ignoring extra labels?
   legend('alg 1', 'alg 2');
   grid on;
 
   ## maybe using saveas is better?
-  plot(range, acc1, acc2);
-
+  plot(range, acc1, acc2)
 endfunction
 
+range = 2:10:100;
+idx = 1
+for d = range
+  mat = tril(rand(d));
+  y = rand(d, 1);
+  acc1(idx) = accuracy(mat, y, 1, 1);
+  idx += 1;
+endfor
+
+##gen_plot(range, acc1, acc1)

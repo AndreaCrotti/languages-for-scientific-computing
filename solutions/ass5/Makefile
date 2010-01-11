@@ -4,7 +4,7 @@ CC = gcc
 OPTIMIZE = -O0 # disable optimization
 # Adding some timing / profiling targets??
 CFLAGS = -Wall -g $(OPTIMIZE)
-LINK = -L$(BLAS) -lblas -lm
+LINK = -lblas -lm
 SOURCES = andrea.c trsv.c trsv.m test.c output.m graph.m utils.c utils.h Makefile
 TARFILE = andrea_crotti.tar.gz
 

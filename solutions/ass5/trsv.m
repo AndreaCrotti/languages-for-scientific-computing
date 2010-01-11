@@ -11,69 +11,71 @@ function x = trsv(L, y, b, alg)
 
   len = length(L);
   ## this could be whatever, after I overwrite any value present
-  x = rand(len, 1)
-  ## the condition on size(Ltl) is automatically fulfilled here 
-  for idx = 0:(len/b)
-    s = idx * b;
-    ## avoiding overflow when b > 1
-    if s > len
-      s = len
-    endif
-    
-    Ltl = L(1:s, 1:s);
-    Lbl = L(s+1:len, 1:s);
-    Lbr = L(s+1:len, s+1:len);
+  x = rand(len, 1);
 
-    if (length(Ltl) == len)
-      return
-    endif
+  ## setting initial values
+  Ltl = L(1:0, 1:0);
+  Lbl = L(1:len, 1:0);
+  Lbr = L(1:len, 1:len);
+  
+  xt = x(1:0);
+  xb = x(1:len);
+  yt = y(1:0);
+  yb = y(1:len);
 
-    ## partition x and y
-    xt = x(1:s);
-    xb = x(s+1:len);
-     		      
-    yt = y(1:s);
-    yb = y(s+1:len);
 
-    ## setting variables needed for both algorithms
+  while size(Ltl) < size(L)
+    L00 = Ltl;
+    L10 = Lbl(1:b, :);
+    L20 = Lbl(b+1:columns(Lbl));
     L11 = Lbr(1:b, 1:b);
-    x1 = xb(1:b);
-    y1 = yb(1:b);
-    x0 = xt;
+    L21 = Lbr(b+1:rows(Lbr), 1:b);
+    L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr));
 
+    x0 = xt;
+    x1 = xb(1:b);
+    x2 = xb(b+1:length(xb));
+
+    y0 = yt;
+    y1 = yb(1:b);
+    y2 = yb(b+1:length(yb));
+    
     ## TODO: pass to unblocked algorithm in case b == 1
     ## math part, choosing which algorithm to execute
     if (alg == 1)
-      L10 = Lbl(1:b, 1:columns(Lbl));
-      y0 = yt;
-
-      y(1) = y1 - L10 * x0;
+      y1 = y1 - L10 * x0;
 
       ## when we have a matrix instead of inverting we call recursively trsv
       if (b > 1)
-	x(1) = trsv(L11, y1, b, alg);
+	x1 = trsv(L11, y1, b, alg);
       else
-	x(1) = L11^(-1) * y1;
+	x1 = L11^(-1) * y1;
       endif
 
     endif
 
     if (alg == 2)
-      L21 = Lbr(1:b, b+1:columns(Lbr));
-      y2 = yb(b+1:length(yb));
-      
       if (b > 1)
-	x(1) = trsv(L11, y1, b, alg);
+	x1 = trsv(L11, y1, b, alg);
       else
-	x(1) = L11^(-1) * y1;
+	x1 = L11^(-1) * y1;
       endif
-      x1
-      L21
-      y(2) = y2 - L21 * x1;
+      y2 = y2 - L21 * x1;
 
     endif
+
+    ## continue with
+    Ltl = [[ L00 zeros(rows(L00), columns(L11)) ] ; [ L10 L11 ]];
+    Lbl = [ L20 L21 ];
+    Lbr = L22;
+
+    xt = [ [x0] ; [x1] ];
+    xb = x2;
+
+    yt = [ [y0] ; [y1] ];
+    yb = y2;
     
-  endfor
+  endwhile
   
 endfunction
 
@@ -126,3 +128,38 @@ y1 = vec([1 1])
 acc = accuracy(l1, y1, 1, 1)
 
 acc2 = accuracy(l1, y1, 1, 2)
+
+
+    
+
+
+  ############################################################
+  # for idx = 0:(len/b)					     #
+  #   s = idx * b;					     #
+  #   ## avoiding overflow when b > 1			     #
+  #   if s > len					     #
+  #     s = len						     #
+  #   endif						     #
+  #   							     #
+  #   Ltl = L(1:s, 1:s);				     #
+  #   Lbl = L(s+1:len, 1:s);				     #
+  #   Lbr = L(s+1:len, s+1:len);			     #
+  # 							     #
+  #   if (length(Ltl) == len)				     #
+  #     return						     #
+  #   endif						     #
+  # 							     #
+  #   ## partition x and y				     #
+  #   xt = x(1:s);					     #
+  #   xb = x(s+1:len);					     #
+  #    		      					     #
+  #   yt = y(1:s);					     #
+  #   yb = y(s+1:len);					     #
+  # 							     #
+  #   ## setting variables needed for both algorithms	     #
+  #   L11 = Lbr(1:b, 1:b);				     #
+  #   x1 = xb(1:b);					     #
+  #   y1 = yb(1:b);					     #
+  #   x0 = xt;						     #
+  ############################################################
+

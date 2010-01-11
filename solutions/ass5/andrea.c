@@ -29,8 +29,16 @@ int main(int argc, char *argv[])
   if (argc == 2) {
     // In this case execute once and return execution time
     n = (int)strtol(argv[1], (char **)NULL, 10);
+
+    L = gen_rand_tril(n);
+    y = gen_rand_vector(n);
+
     // a generic function timer should take the function pointer as argument
     ctime = TS;
+    
+    // calling the function itself
+    check_trsv(L, y, n, (* my_trsv));
+
     tot_time = TS - ctime;
     printf("execution time was: %f\n;", tot_time);
   }
@@ -124,7 +132,11 @@ double *my_trsv(double *L, double *y, int len) {
 int check_trsv(double *L, double *y, int len,
 	       double * (*trsv)(double *, double *, int)) {
 
+  double acc;
   double *x = malloc(sizeof(double) * len);
   x = (*trsv) (L, y, len);
+  
+  acc = accuracy(L, y, x, len);
+  printf("accuracy obtained is %f\n", acc);
   return 0;
 }

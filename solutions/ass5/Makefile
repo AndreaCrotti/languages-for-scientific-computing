@@ -21,7 +21,7 @@ andrea : utils
 	$(CC) $(CFLAGS) -c andrea.c
 	$(CC) -o andrea andrea.o utils.o
 
-0test : utils
+test : utils
 	$(CC) $(CFLAGS) -c test.c
 	$(CC) -o test test.o utils.o
 

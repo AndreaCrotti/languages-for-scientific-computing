@@ -11,7 +11,6 @@ void print_double_matrix(double *matrix, int dim) {
   for (i = 0; i < dim; i++) {
     printf("\t");
     for (j = 0; j < dim; j++)
-      // FIXME set a certain amount of numbers
       printf("%"PRECISION"\t", matrix[i*dim + j]);
     printf("\n");
   }
@@ -62,28 +61,27 @@ void print_vector_to_matlab(FILE *output, double *vector, int len) {
   fprintf(output, "]\n");
 }
 
-/*******************************************************************/
-/* // tries to write to a .m file the square matrix given	   */
-/* int matrix_to_matlab(double *matrix, int len, char *filename) { */
-/*   FILE *output = fopen(filename, "w");			   */
-/*   // Using fprintf or fwrite?				   */
-/*   // not able to open it					   */
-/*   if (output == NULL) {					   */
-/*       printf("not able to open the file");			   */
-/*       return 0;						   */
-/*   }								   */
-/*   int i, j;							   */
-/*   								   */
-/*   fprintf(output, "[");					   */
-/*   for (i = 0; i < len; i++) {				   */
-/*     fprintf(output, "[");					   */
-/*     for (j = 0; j < len; j++) {				   */
-/*       fprintf(output, "%"PRECISION" ", matrix[i*len + j]);	   */
-/*     }							   */
-/*     fprintf(output, "]\n");					   */
-/*   }								   */
-/*   fprintf(output, "]");					   */
-/*   fclose(output);						   */
-/*   return 1;							   */
-/* }								   */
-/*******************************************************************/
+double norm(double *vector, int len) {
+  int i;
+  double norm = 0;
+  // sum the squares and then output the square root
+  for (i = 0; i < len; i++) {
+    norm += pow(vector[i], 2);
+  }
+  return sqrt(norm);
+}
+
+// returns the accuracy of my solution return ||Lx - y||
+double accuracy(double *L, double *y, double *x, int len) {
+  double *lx = (double *) malloc(sizeof(double) * len);
+  int i, j;
+  
+  for (i = 0; i < len; i++) {
+    // substracting y in initialization time
+    lx[i] = -y[i];
+    for (j = 0; j < len; j++) {
+      lx[i] += L[i*len + j] * x[j];
+    }
+  }
+  return norm(lx, len);
+}

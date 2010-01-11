@@ -24,6 +24,7 @@ function x = trsv(L, y, b, alg)
   yb = y(1:len);
 
   while size(Ltl) < size(L)
+    ## partitioning
     L00 = Ltl;
     L10 = Lbl(1:b, :);
     L20 = Lbl(b+1:rows(Lbl), :);

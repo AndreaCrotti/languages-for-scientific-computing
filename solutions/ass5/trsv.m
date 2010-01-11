@@ -11,7 +11,7 @@ function x = trsv(L, y, b, alg)
 
   len = length(L);
   ## this could be whatever, after I overwrite any value present
-  x = rand(len, 1);
+  x = zeros(len, 1);
 
   ## setting initial values
   Ltl = L(1:0, 1:0);
@@ -23,11 +23,10 @@ function x = trsv(L, y, b, alg)
   yt = y(1:0);
   yb = y(1:len);
 
-
   while size(Ltl) < size(L)
     L00 = Ltl;
     L10 = Lbl(1:b, :);
-    L20 = Lbl(b+1:columns(Lbl));
+    L20 = Lbl(b+1:columns(Lbl), :);
     L11 = Lbr(1:b, 1:b);
     L21 = Lbr(b+1:rows(Lbr), 1:b);
     L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr));
@@ -60,11 +59,14 @@ function x = trsv(L, y, b, alg)
       else
 	x1 = L11^(-1) * y1;
       endif
+      y2
+      L21
+      x1
       y2 = y2 - L21 * x1;
 
     endif
 
-    ## continue with
+    ## continue with part
     Ltl = [[ L00 zeros(rows(L00), columns(L11)) ] ; [ L10 L11 ]];
     Lbl = [ L20 L21 ];
     Lbr = L22;
@@ -74,9 +76,9 @@ function x = trsv(L, y, b, alg)
 
     yt = [ [y0] ; [y1] ];
     yb = y2;
-    
   endwhile
-  
+  ## this is the result in the end
+  x = xt;
 endfunction
 
 function passed = test_TRSV()
@@ -97,7 +99,7 @@ endfunction
 
 function acc = accuracy(L, y, b, alg)
   x = trsv(L, y, b, alg)
-  acc = norm(L * x - y)
+  acc = norm(L * x - y);
 endfunction
 
 function gen_plot(b)
@@ -127,39 +129,4 @@ l1 = [[1 0]; [1 1]]
 y1 = vec([1 1])
 acc = accuracy(l1, y1, 1, 1)
 
-acc2 = accuracy(l1, y1, 1, 2)
-
-
-    
-
-
-  ############################################################
-  # for idx = 0:(len/b)					     #
-  #   s = idx * b;					     #
-  #   ## avoiding overflow when b > 1			     #
-  #   if s > len					     #
-  #     s = len						     #
-  #   endif						     #
-  #   							     #
-  #   Ltl = L(1:s, 1:s);				     #
-  #   Lbl = L(s+1:len, 1:s);				     #
-  #   Lbr = L(s+1:len, s+1:len);			     #
-  # 							     #
-  #   if (length(Ltl) == len)				     #
-  #     return						     #
-  #   endif						     #
-  # 							     #
-  #   ## partition x and y				     #
-  #   xt = x(1:s);					     #
-  #   xb = x(s+1:len);					     #
-  #    		      					     #
-  #   yt = y(1:s);					     #
-  #   yb = y(s+1:len);					     #
-  # 							     #
-  #   ## setting variables needed for both algorithms	     #
-  #   L11 = Lbr(1:b, 1:b);				     #
-  #   x1 = xb(1:b);					     #
-  #   y1 = yb(1:b);					     #
-  #   x0 = xt;						     #
-  ############################################################
-
+#acc2 = accuracy(l1, y1, 1, 2)

@@ -7,13 +7,13 @@
 ## With blocking we need to call recursively TRSV on the inner block
 ## if necessary
 function x = trsv(L, y, b, alg)
+  ## No sanity check of the input, assuming is always correct
+
   len = length(L);
-  req = len / b;
   ## this could be whatever, after I overwrite any value present
-  x = 1:len
+  x = rand(len, 1)
   ## the condition on size(Ltl) is automatically fulfilled here 
-  for idx = 0:req
-    step = idx
+  for idx = 0:(len/b)
     s = idx * b;
     ## avoiding overflow when b > 1
     if s > len
@@ -28,7 +28,7 @@ function x = trsv(L, y, b, alg)
       return
     endif
 
-    ## but where do I instantiate x?
+    ## partition x and y
     xt = x(1:s);
     xb = x(s+1:len);
      		      
@@ -41,13 +41,13 @@ function x = trsv(L, y, b, alg)
     y1 = yb(1:b);
     x0 = xt;
 
+    ## TODO: pass to unblocked algorithm in case b == 1
     ## math part, choosing which algorithm to execute
-    if alg == 1
+    if (alg == 1)
       L10 = Lbl(1:b, 1:columns(Lbl));
       y0 = yt;
 
-      printf("x0 = %d and L10 = %d")
-      y(1) = y1 - L10 * vec(x0);
+      y(1) = y1 - L10 * x0;
 
       ## when we have a matrix instead of inverting we call recursively trsv
       if (b > 1)
@@ -67,8 +67,9 @@ function x = trsv(L, y, b, alg)
       else
 	x(1) = L11^(-1) * y1;
       endif
-
-      y(2) = y2 - L21 * vec(x1);
+      x1
+      L21
+      y(2) = y2 - L21 * x1;
 
     endif
     
@@ -94,10 +95,10 @@ endfunction
 
 function acc = accuracy(L, y, b, alg)
   x = trsv(L, y, b, alg)
-  acc = norm(L * vec(x) - vec(y))
+  acc = norm(L * x - y)
 endfunction
 
-function gen_plot()
+function gen_plot(b)
   idx = 1
   range = 10:10:100
   for d = range
@@ -112,11 +113,16 @@ function gen_plot()
   xlabel('dimension');
   ylabel('accuracy');
   legend('alg 1', 'alg 2');
+  grid on;
 
+  ## maybe using saveas is better?
   plot(range, acc1, acc2);
 
 endfunction
 
-l1 = [[1 0]; [1 1]];
-y1 = [1 1];
+l1 = [[1 0]; [1 1]]
+##y1 = rand(2, 1)
+y1 = vec([1 1])
 acc = accuracy(l1, y1, 1, 1)
+
+acc2 = accuracy(l1, y1, 1, 2)

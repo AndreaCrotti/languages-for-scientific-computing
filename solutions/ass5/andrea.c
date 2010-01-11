@@ -4,7 +4,8 @@
 #include <string.h>
 #include "utils.h"
 
-#define LEN 10
+// Can I also set a global parameter LEN (not a macro)
+
 // macro useful to pass from array index to position
 #define IDX_TO_CONT(i, l, s) ((i+1)*s + l)
 
@@ -13,7 +14,7 @@
 
 // To test my result print them to file and then load the results in octave
 
-double *my_trsv(double *, double *, int);
+double *forward_trsv(double *, double *, int);
 int check_trsv(double *L, double *y, int len,
 	       double * (*trsv)(double *, double *, int));
 
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
     ctime = TS;
     
     // calling the function itself
-    check_trsv(L, y, n, (* my_trsv));
+    check_trsv(L, y, n, (* forward_trsv));
 
     tot_time = TS - ctime;
     printf("execution time was: %f\n;", tot_time);
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
       y = gen_rand_vector(len);
 
       ctime = TS;
-      x = my_trsv(L, y, len);
+      x = forward_trsv(L, y, len);
       times[i] = TS - ctime;
             
       //printf("time spent for len %d = %.6f\n", len, times[i]);
@@ -111,18 +112,17 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-
 // put in x the result of the computation
-double *my_trsv(double *L, double *y, int len) {
+double *forward_trsv(double *L, double *y, int len) {
   // one advice is to use the upper part of the matrix for temp space
-  int i, j, before;
+  int i, j;
   double *x = (double *) malloc(sizeof(double) * len);
   for (i = 0; i < len; i++) {
-    before = 0;
+    x[i] = y[i];
     for (j = 0; j < i; j++) {
-      before += L[i*len + j] * x[j];
+      x[i] -= L[i*len + j] * x[j];
     }
-    x[i] = (y[i] - before) / L[i*(len + 1)]; // equal to L[i][i]
+    x[i] /= L[i*(len + 1)]; // equal to L[i][i]
   }
   // Finally use the norm2 to check if the result is close enough to 0
   return x;

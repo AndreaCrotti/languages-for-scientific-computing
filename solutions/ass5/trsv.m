@@ -26,7 +26,7 @@ function x = trsv(L, y, b, alg)
   while size(Ltl) < size(L)
     L00 = Ltl;
     L10 = Lbl(1:b, :);
-    L20 = Lbl(b+1:columns(Lbl), :);
+    L20 = Lbl(b+1:rows(Lbl), :);
     L11 = Lbr(1:b, 1:b);
     L21 = Lbr(b+1:rows(Lbr), 1:b);
     L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr));
@@ -68,7 +68,7 @@ function x = trsv(L, y, b, alg)
 
     ## continue with part
     Ltl = [[ L00 zeros(rows(L00), columns(L11)) ] ; [ L10 L11 ]];
-    Lbl = [ L20 L21 ];
+    Lbl = [ L20  L21 ];
     Lbr = L22;
 
     xt = [ [x0] ; [x1] ];
@@ -81,16 +81,6 @@ function x = trsv(L, y, b, alg)
   x = xt;
 endfunction
 
-function passed = test_TRSV()
-  ## Testing my function, returns true if satisfied
-  dim = 10
-  m1 = rand(dim)
-  m2 = rand(dim) + eye(dim)
-  m3 = randn(dim)
-
-  for i = m1, m2, m3
-  endfor
-endfunction
 
 
 ## get the accuracy and print it nicely
@@ -98,8 +88,23 @@ endfunction
 ## y = accuracy (different lines for different problem)
 
 function acc = accuracy(L, y, b, alg)
+  L
+  y
   x = trsv(L, y, b, alg)
   acc = norm(L * x - y);
+endfunction
+
+function passed = test_trsv(dim)
+  ## Testing my function, returns true if satisfied
+  ## matrices to test
+  m1 = tril(rand(dim));
+  m2 = tril(rand(dim) + eye(dim));
+  m3 = tril(randn(dim));
+  y = randn(dim, 1);
+
+  accuracy(m1, y, 1, 1)
+  accuracy(m2, y, 1, 1)
+
 endfunction
 
 function gen_plot(b)
@@ -124,9 +129,3 @@ function gen_plot(b)
 
 endfunction
 
-l1 = [[1 0]; [1 1]]
-##y1 = rand(2, 1)
-y1 = vec([1 1])
-acc = accuracy(l1, y1, 1, 1)
-
-#acc2 = accuracy(l1, y1, 1, 2)

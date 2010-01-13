@@ -125,22 +125,8 @@ void forward_trsv(double *L, double *y, int len) {
   }
   // we now assign the right pointers
   // FIXME: doesn't work as it should assigning pointers in this way
-  y = x;
-  free(y);
-}
-
-// this version overwrites y using less memory and should be faster
-void forward_trsv_over(double *L, double *y, int len) {
-  // We must use upper part of the matrix as temporary cells to compute
-  // intermediate results.
-  int i, j;
-  for (i = 0; i < len; i++) {
-    for (j = 0; j < i; j++) {
-      y[i] -= L[i*len + j] * y[j];
-      
-    }
-  }
-  
+  memcpy(y, x, sizeof(double)*len);
+  free(x);
 }
 
 // checking correctness of our algorithm
@@ -149,12 +135,15 @@ int check_trsv(double *L, double *y, int len,
 
   double acc;
   double *y_temp = malloc(sizeof(double) * len);
+  printf("y before\n");
   print_double_vector(y, len);
-  memcpy(y_temp, y, len);
+  memcpy(y_temp, y, sizeof(double)*len);
+  printf("y_temp\n");
 
   print_double_vector(y_temp, len);
   (*trsv) (L, y, len);
   
+  printf("y later, shoud be x\n");
   print_double_vector(y, len);
   acc = accuracy(L, y_temp, y, len);
   printf("accuracy obtained is %.10f\n", acc);

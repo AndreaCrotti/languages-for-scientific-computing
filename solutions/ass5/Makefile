@@ -15,15 +15,15 @@ utils : utils.o
 
 trsv : utils
 	$(CC) $(CFLAGS) $(LINK) -c trsv.c
-	$(CC) -o trsv trsv.o utils.o
+	$(CC) -o trsv -lm trsv.o utils.o
 
 andrea : utils
 	$(CC) $(CFLAGS) -c andrea.c
-	$(CC) -o andrea andrea.o utils.o
+	$(CC) -lm -o andrea andrea.o utils.o
 
 test : utils
 	$(CC) $(CFLAGS) -c test.c
-	$(CC) -o test test.o utils.o
+	$(CC) -lm -o test test.o utils.o
 
 clean :
 	rm -f *.o

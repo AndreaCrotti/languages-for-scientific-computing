@@ -82,7 +82,7 @@ endfunction
 
 function acc = accuracy(L, y, b, alg)
   x = trsv(L, y, b, alg);
-  acc = norm(L * x - y);
+  acc = norm(L * x - y, "fro");
   if (acc > 1)
     printf("length(L) = %d and acc = %f\n", length(L), acc);
   endif
@@ -118,24 +118,34 @@ function gen_plot(range, acc1, acc2)
 endfunction
 
 # 
-dim_range = 2:10:200;
+dim_range = 2:2:100;
 
 ## those 4 indented loops are needed to make the code more elegant and avoid
 ## creating a thousand variables
-for dim = dim_range
-  test_mat = [ tril(rand(dim)) tril(rand(d) +  eye(d)) tril(randn(dim)) ];
-  y = rand(dim, 1);
 
-  hold on;
-  grid on;
-  for b = 1:2
-    for alg = 1:2
-      for idx = 1:dim:columns(test_mat)
-	m = test_mat(:, idx:idx+(dim-1)) # splitting the test matrix
-	plot(dim, accuracy(m, y, b, alg))
-      endfor
+hold on;
+grid on;
+for b = 1:2
+  for alg = 1:2
+    xax = 1;
+    for dim = dim_range
+      y = rand(dim, 1);
+      m1 = tril(rand(dim));
+      m2 = tril(rand(dim) + eye(dim));
+      m3 = tril(randn(dim));	  
+      acc1(xax) = accuracy(m1, y, b, alg);
+      acc2(xax) = accuracy(m2, y, b, alg);
+      acc3(xax) = accuracy(m3, y, b, alg);
+      xax = xax + 1;
     endfor
+    length(dim_range)
+    length(acc1)
+    length(acc2)
+#    plot(dim_range, acc1);
+    plot(dim_range, acc2);
+    plot(dim_range, acc3);
   endfor
 endfor
+
 
 #gen_plot(range, acc11, acc12, acc13, acc21, acc22, acc23)

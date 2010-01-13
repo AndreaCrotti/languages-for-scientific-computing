@@ -82,6 +82,7 @@ endfunction
 
 function acc = accuracy(L, y, b, alg)
   x = trsv(L, y, b, alg);
+  ## froebius norm is needed to make sure we always get a scalar
   acc = norm(L * x - y, "fro");
   if (acc > 1)
     printf("length(L) = %d and acc = %f\n", length(L), acc);
@@ -126,6 +127,7 @@ dim_range = 2:2:100;
 hold on;
 grid on;
 for b = 1:2
+  ## adding info about what algorithm and if blocked/non blocked code
   for alg = 1:2
     xax = 1;
     for dim = dim_range
@@ -138,13 +140,12 @@ for b = 1:2
       acc3(xax) = accuracy(m3, y, b, alg);
       xax = xax + 1;
     endfor
-    length(dim_range)
-    length(acc1)
-    length(acc2)
-#    plot(dim_range, acc1);
-    plot(dim_range, acc2);
-    plot(dim_range, acc3);
-  endfor
+    acc1
+    acc2
+    acc3
+#    plot(dim_range, acc2);
+#    plot(dim_range, acc3);
+  endfor			
 endfor
 
 

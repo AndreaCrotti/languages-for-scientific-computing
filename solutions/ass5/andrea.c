@@ -106,13 +106,13 @@ int main(int argc, char *argv[])
     free(times);
   }
   else {
-    printf("usage:\n./andrea n\nandrea l r s 0|1\n");
+    printf("usage:\n\tandrea n\n\tandrea l r s 0|1\n");
     return(-1);
   }
   return 0;
 }
 
-// put in x the result of the computation
+// try to optimize this in some ways
 double *forward_trsv(double *L, double *y, int len) {
   // one advice is to use the upper part of the matrix for temp space
   int i, j;
@@ -122,10 +122,15 @@ double *forward_trsv(double *L, double *y, int len) {
     for (j = 0; j < i; j++) {
       x[i] -= L[i*len + j] * x[j];
     }
-    x[i] /= L[i*(len + 1)]; // equal to L[i][i]
+    x[i] /= L[i*(len + 1)];
   }
-  // Finally use the norm2 to check if the result is close enough to 0
   return x;
+}
+
+// this version overwrites y using less memory and should be faster
+double *forward_trsv_over(double *L, double *y, int len) {
+  // We must use upper part of the matrix as temporary cells to compute
+  // intermediate results.
 }
 
 // checking correctness of our algorithm
@@ -137,6 +142,6 @@ int check_trsv(double *L, double *y, int len,
   x = (*trsv) (L, y, len);
   
   acc = accuracy(L, y, x, len);
-  printf("accuracy obtained is %f\n", acc);
+  printf("accuracy obtained is %.10f\n", acc);
   return 0;
 }

@@ -47,7 +47,7 @@ function x = trsv(L, y, b, alg)
 
       ## when we have a matrix instead of inverting we call recursively trsv
       if (b > 1)
-	x1 = trsv(L11, y1, b, alg);
+	x1 = trsv(L11, y1, 1, alg);
       else
 	x1 = L11^(-1) * y1;
       endif
@@ -108,6 +108,7 @@ endfunction
 ## get the accuracy of the algorithm and plot it nicely
 ## x = problem size
 ## y = accuracy (different lines for different problem)
+## Plotting should contain also the precision working with the different kind of matrices
 function gen_plot(range, acc1, acc2)
   xlabel('dimension');
   ylabel('accuracy');
@@ -120,9 +121,9 @@ function gen_plot(range, acc1, acc2)
 endfunction
 
 range = 2:10:100;
-idx = 1
+idx = 1;
 for d = range
-  mat = tril(rand(d));
+  mat = tril(rand(d) +  eye(d));
   y = rand(d, 1);
   acc1(idx) = accuracy(mat, y, 1, 1);
   idx += 1;

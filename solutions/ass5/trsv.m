@@ -1,31 +1,32 @@
-#!/usr/bin/env octave --persist
+#!/usr/bin/octave --persist
+
+# range used to plot the error
+dim_range = 3:1:10;
 
 ## Taking a triangular lower matrix L as input
 ## we want to find x such that Lx = y
 ## Find out how the triangular linear system actually works
 
 ## With blocking we need to call recursively TRSV on the inner block
-## if necessary
 function x = trsv(L, y, b, alg)
   ## No sanity check of the input, assuming is always correct
 
-  len = length(L);
-  ## this could be whatever, after I overwrite any value present
-  x = zeros(len, 1);
+  x = zeros(length(L), 1); # gets always overwritten
 
   ## setting initial values
   Ltl = L(1:0, 1:0);
-  Lbl = L(1:len, 1:0);
-  Lbr = L(1:len, 1:len);
+  Lbl = L(1:end, 1:0);
+  Lbr = L(1:end, 1:end);
   
   xt = x(1:0);
-  xb = x(1:len);
+  xb = x(1:end);
   yt = y(1:0);
-  yb = y(1:len);
+  yb = y(1:end);
 
   while size(Ltl) < size(L)
     ## partitioning
     L00 = Ltl;
+    ## FIXME: when b > 1 this doesn't work
     L10 = Lbl(1:b, :);
     L20 = Lbl(b+1:end, :);
     L11 = Lbr(1:b, 1:b);
@@ -40,7 +41,6 @@ function x = trsv(L, y, b, alg)
     y1 = yb(1:b);
     y2 = yb(b+1:end);
     
-    ## TODO: pass to unblocked algorithm?
     ## math part, choosing which algorithm to execute
     if (alg == 1)
       y1 = y1 - L10 * x0;
@@ -76,56 +76,24 @@ function x = trsv(L, y, b, alg)
     yt = [ [y0] ; [y1] ];
     yb = y2;
   endwhile
-  ## this is the result in the end
-  x = xt;
+  x = xt; # finally getting the result in x
+
 endfunction
 
 function err = error(L, y, b, alg)
   x = trsv(L, y, b, alg);
   ## froebius norm is needed to make sure we always get a scalar
   err = norm(L * x - y, "fro");
-  if (err > 1)
-    printf("length(L) = %d and err = %f\n", length(L), err);
-  endif
-    
+  
 endfunction
 
-function test_trsv(dim, alg)
-  ## Testing my function, returns true if satisfied
-  ## matrices to test
-  m1 = tril(rand(dim));
-  m2 = tril(rand(dim) + eye(dim));
-  m3 = tril(randn(dim));
-  y = randn(dim, 1);
-
-  error(m1, y, 1, alg)
-  error(m2, y, 1, alg)
-
-endfunction
-
-## get the error of the algorithm and plot it nicely
-## x = problem size
-## y = error (different lines for different problem)
-## Plotting should contain also the precision working with the different kind of matrices
-function gen_plot(range, err1, err2)
-  xlabel('dimension');
-  ylabel('error');
-  ## why ignoring extra labels?
-  legend('alg 1', 'alg 2');
-  grid on;
-
-  ## maybe using saveas is better?
-  plot(range, err1, err2)
-endfunction
-
-# 
-dim_range = 2:2:100;
-
-## those 4 indented loops are needed to make the code more elegant and avoid
-## creating a thousand variables
-
+# general parameters
 hold on;
 grid on;
+title("analysis of trsv precision");
+xlabel("dimension");
+ylabel("error");
+
 for b = 1:2
   ## adding info about what algorithm and if blocked/non blocked code
   for alg = 1:2
@@ -140,13 +108,11 @@ for b = 1:2
       err3(xax) = error(m3, y, b, alg);
       xax = xax + 1;
     endfor
-    err1
-    err2
-    err3
-#    plot(dim_range, err2);
-#    plot(dim_range, err3);
-  endfor			
+    
+    # this should put in a for loop
+    plot(dim_range, err1, sprintf("+-%d;b=%d,alg=%d,mat=1;", 1*b, b, alg));
+    plot(dim_range, err2, sprintf("+-%d;b=%d,alg=%d,mat=2;", 2*b, b, alg));
+    plot(dim_range, err3, sprintf("+-%d;b=%d,alg=%d,mat=3;", 3*b, b, alg));
+  endfor
 endfor
 
-
-#gen_plot(range, err11, err12, err13, err21, err22, err23)

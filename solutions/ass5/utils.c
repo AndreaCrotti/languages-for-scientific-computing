@@ -58,7 +58,7 @@ void print_vector_to_matlab(FILE *output, double *vector, int len) {
   for (i = 0; i < len; i++) {
     fprintf(output, "%"PRECISION" ", vector[i]);
   }
-  fprintf(output, "]\n");
+  fprintf(output, "];\n");
 }
 
 double norm(double *vector, int len) {

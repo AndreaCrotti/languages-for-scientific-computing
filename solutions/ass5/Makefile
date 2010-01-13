@@ -11,6 +11,7 @@ TARFILE = andrea_crotti.tar.gz
 
 all : clean trsv andrea
 
+# how is make calling an implicit rule and compiling utils twice?
 utils : utils.o
 	$(CC) $(CFLAGS) -c utils.c
 

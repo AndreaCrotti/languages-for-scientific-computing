@@ -28,11 +28,12 @@ int main(int argc, char *argv[])
     L = gen_rand_tril(n);
     y = gen_rand_vector(n);
 
+    forward_trsv(L, y, n);
     // a generic function timer should take the function pointer as argument
     ctime = TS;
     
     tot_time = TS - ctime;
-    printf("execution time was: %f\n;", tot_time);
+    printf("execution time for dimension %d was: %f\n;", n, tot_time);
     free(L); free(y);
   }
   
@@ -63,15 +64,14 @@ int main(int argc, char *argv[])
     }
     printf("writing output to file %s\n", OUTPUT_FILE);
 
-    // we assume that the input from the comma
+    // we assume that the input from the command line
     FILE *output = fopen(OUTPUT_FILE, "w");
 
-    // producing the 2 vectors
-    char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
     // and then add both to it
-    fprintf(output, ticks, l, s, r);
+    fprintf(output, "andreaticks = [ %d:%d:%d ];\n", l, s, r);
     fprintf(output, "andreatimes = ");
     print_vector_to_matlab(output, times, n);
+
     fclose(output);
 
     if (!sw)

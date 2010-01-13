@@ -61,7 +61,7 @@ function x = trsv(L, y, b, alg)
       else
 	x1 = L11^(-1) * y1;
       endif
-      y2 = vec(y2) - L21 * x1;
+      y2 = vec(y2) - L21 * x1; ## here vec is needed to force a column vector
 
     endif
 
@@ -117,13 +117,24 @@ function gen_plot(range, acc1, acc2)
   plot(range, acc1, acc2)
 endfunction
 
-range = 2:10:100;
+# 
+dim_range = 2:10:200;
+
 idx = 1;
-for d = range
-  mat = tril(rand(d) +  eye(d));
-  y = rand(d, 1);
-  acc1(idx) = accuracy(mat, y, 1, 1);
+for dim = dim_range
+  test_mat = [ tril(rand(dim)) tril(rand(d) +  eye(d)) tril(randn(dim)) ];
+  m1 = tril(rand(dim));
+  m2 = tril(rand(dim) + eye(dim));
+  m3 = tril(randn(dim));
+  y = rand(dim, 1);
+  acc11(idx) = accuracy(m1, y, b, 1);
+  acc12(idx) = accuracy(m2, y, b, 1);
+  acc13(idx) = accuracy(m3, y, b, 1);
+  acc21(idx) = accuracy(m1, y, b, 2);
+  acc22(idx) = accuracy(m2, y, b, 2);
+  acc23(idx) = accuracy(m3, y, b, 2);
+
   idx += 1;
 endfor
 
-##gen_plot(range, acc1, acc1)
+#gen_plot(range, acc11, acc12, acc13, acc21, acc22, acc23)

@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
       // only works with octave
       fprintf(graph, "#!/usr/bin/octave --persist\n");
-      // now I get the informations from the other file always generated
+      // the output file is always been generated
       fprintf(graph, "source(\""OUTPUT_FILE"\");\n");
       fprintf(graph, "title('time vs matrix dimension');\n");
       fprintf(graph, "xlabel('dimension');\n");
@@ -123,8 +123,6 @@ void forward_trsv(double *L, double *y, int len) {
     }
     x[i] /= L[i*(len + 1)];
   }
-  // we now assign the right pointers
-  // FIXME: doesn't work as it should assigning pointers in this way
   memcpy(y, x, sizeof(double)*len);
   free(x);
 }
@@ -133,21 +131,13 @@ void forward_trsv(double *L, double *y, int len) {
 int check_trsv(double *L, double *y, int len,
 	       void (*trsv)(double *, double *, int)) {
 
-  double acc;
+  double err;
   double *y_temp = malloc(sizeof(double) * len);
-  printf("y before\n");
-  print_double_vector(y, len);
   memcpy(y_temp, y, sizeof(double)*len);
-  printf("y_temp\n");
 
-  print_double_vector(y_temp, len);
   (*trsv) (L, y, len);
   
-  printf("y later, shoud be x\n");
-  print_double_vector(y, len);
-  acc = accuracy(L, y_temp, y, len);
-  printf("accuracy obtained is %.10f\n", acc);
+  err = error(L, y_temp, y, len);
+  printf("error obtained is %.10f\n", err);
   return 0;
 }
-
-

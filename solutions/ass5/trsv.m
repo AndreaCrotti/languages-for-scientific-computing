@@ -80,12 +80,12 @@ function x = trsv(L, y, b, alg)
   x = xt;
 endfunction
 
-function acc = accuracy(L, y, b, alg)
+function err = error(L, y, b, alg)
   x = trsv(L, y, b, alg);
   ## froebius norm is needed to make sure we always get a scalar
-  acc = norm(L * x - y, "fro");
-  if (acc > 1)
-    printf("length(L) = %d and acc = %f\n", length(L), acc);
+  err = norm(L * x - y, "fro");
+  if (err > 1)
+    printf("length(L) = %d and err = %f\n", length(L), err);
   endif
     
 endfunction
@@ -98,24 +98,24 @@ function test_trsv(dim, alg)
   m3 = tril(randn(dim));
   y = randn(dim, 1);
 
-  accuracy(m1, y, 1, alg)
-  accuracy(m2, y, 1, alg)
+  error(m1, y, 1, alg)
+  error(m2, y, 1, alg)
 
 endfunction
 
-## get the accuracy of the algorithm and plot it nicely
+## get the error of the algorithm and plot it nicely
 ## x = problem size
-## y = accuracy (different lines for different problem)
+## y = error (different lines for different problem)
 ## Plotting should contain also the precision working with the different kind of matrices
-function gen_plot(range, acc1, acc2)
+function gen_plot(range, err1, err2)
   xlabel('dimension');
-  ylabel('accuracy');
+  ylabel('error');
   ## why ignoring extra labels?
   legend('alg 1', 'alg 2');
   grid on;
 
   ## maybe using saveas is better?
-  plot(range, acc1, acc2)
+  plot(range, err1, err2)
 endfunction
 
 # 
@@ -135,18 +135,18 @@ for b = 1:2
       m1 = tril(rand(dim));
       m2 = tril(rand(dim) + eye(dim));
       m3 = tril(randn(dim));	  
-      acc1(xax) = accuracy(m1, y, b, alg);
-      acc2(xax) = accuracy(m2, y, b, alg);
-      acc3(xax) = accuracy(m3, y, b, alg);
+      err1(xax) = error(m1, y, b, alg);
+      err2(xax) = error(m2, y, b, alg);
+      err3(xax) = error(m3, y, b, alg);
       xax = xax + 1;
     endfor
-    acc1
-    acc2
-    acc3
-#    plot(dim_range, acc2);
-#    plot(dim_range, acc3);
+    err1
+    err2
+    err3
+#    plot(dim_range, err2);
+#    plot(dim_range, err3);
   endfor			
 endfor
 
 
-#gen_plot(range, acc11, acc12, acc13, acc21, acc22, acc23)
+#gen_plot(range, err11, err12, err13, err21, err22, err23)

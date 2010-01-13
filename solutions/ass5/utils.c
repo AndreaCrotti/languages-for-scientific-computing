@@ -72,9 +72,10 @@ double norm(double *vector, int len) {
 }
 
 // returns the accuracy of my solution return ||Lx - y||
-double accuracy(double *L, double *y, double *x, int len) {
+double error(double *L, double *y, double *x, int len) {
   double *lx = (double *) malloc(sizeof(double) * len);
   int i, j;
+  double error;
   
   for (i = 0; i < len; i++) {
     // substracting y in initialization time
@@ -83,5 +84,8 @@ double accuracy(double *L, double *y, double *x, int len) {
       lx[i] += L[i*len + j] * x[j];
     }
   }
-  return norm(lx, len);
+  error = norm(lx, len);
+  // this style of malloc/free is not very convincing
+  free(lx);
+  return error;
 }

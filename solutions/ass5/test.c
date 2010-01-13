@@ -7,6 +7,6 @@ int main(int argc, char *argv[])
   double y[] = {1, 1};
   double x[] = {1, 0};
   
-  printf("accuracy for sample is %f\n", accuracy(L, y, x, 2));
+  printf("error for sample is %f\n", error(L, y, x, 2));
   return 0;
 }

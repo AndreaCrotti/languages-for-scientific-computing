@@ -13,4 +13,4 @@ void print_vector_to_matlab(FILE *, double *, int);
 
 double norm(double *, int);
 
-double accuracy(double *, double *, double *, int);
+double error(double *, double *, double *, int);

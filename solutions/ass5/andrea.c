@@ -4,20 +4,13 @@
 #include <string.h>
 #include "utils.h"
 
-// Can I also set a global parameter LEN (not a macro)
-
 // macro useful to pass from array index to position
 #define IDX_TO_CONT(i, l, s) ((i+1)*s + l)
 
 #define OUTPUT_FILE "output.m"
 #define OUTPUT_GRAPH "graph.m"
 
-// To test my result print them to file and then load the results in octave
-
 void forward_trsv(double *, double *, int);
-void forward_trsv_over(double *, double *, int);
-int check_trsv(double *L, double *y, int len,
-	       void (*trsv)(double *, double *, int));
 
 int main(int argc, char *argv[])
 {
@@ -38,9 +31,6 @@ int main(int argc, char *argv[])
     // a generic function timer should take the function pointer as argument
     ctime = TS;
     
-    // calling the function itself
-    check_trsv(L, y, n, (* forward_trsv));
-
     tot_time = TS - ctime;
     printf("execution time was: %f\n;", tot_time);
     free(L); free(y);
@@ -85,7 +75,7 @@ int main(int argc, char *argv[])
     fclose(output);
 
     if (!sw)
-      printf("graph.m is already generated and made general\n");
+      printf("%s is already generated and made general\n", OUTPUT_GRAPH);
 
     free(times);
   }
@@ -110,20 +100,4 @@ void forward_trsv(double *L, double *y, int len) {
   }
   memcpy(y, x, sizeof(double)*len);
   free(x);
-}
-
-// checking correctness of our algorithm
-int check_trsv(double *L, double *y, int len,
-	       void (*trsv)(double *, double *, int)) {
-
-  double err;
-  double *y_temp = malloc(sizeof(double) * len);
-  memcpy(y_temp, y, sizeof(double)*len);
-
-  (*trsv) (L, y, len);
-  
-  err = error(L, y_temp, y, len);
-  printf("error obtained is %.10f\n", err);
-  free(y_temp);
-  return 0;
 }

@@ -120,21 +120,23 @@ endfunction
 # 
 dim_range = 2:10:200;
 
-idx = 1;
+## those 4 indented loops are needed to make the code more elegant and avoid
+## creating a thousand variables
 for dim = dim_range
   test_mat = [ tril(rand(dim)) tril(rand(d) +  eye(d)) tril(randn(dim)) ];
-  m1 = tril(rand(dim));
-  m2 = tril(rand(dim) + eye(dim));
-  m3 = tril(randn(dim));
   y = rand(dim, 1);
-  acc11(idx) = accuracy(m1, y, b, 1);
-  acc12(idx) = accuracy(m2, y, b, 1);
-  acc13(idx) = accuracy(m3, y, b, 1);
-  acc21(idx) = accuracy(m1, y, b, 2);
-  acc22(idx) = accuracy(m2, y, b, 2);
-  acc23(idx) = accuracy(m3, y, b, 2);
 
-  idx += 1;
+  hold on;
+  grid on;
+  for b = 1:2
+    for alg = 1:2
+      for idx = 1:dim:columns(test_mat)
+	m = test_mat(:, idx:idx+(dim-1)) # splitting the test matrix
+	plot(dim, accuracy(m, y, b, alg))
+      endfor
+    endfor
+  endfor
+    
 endfor
 
 #gen_plot(range, acc11, acc12, acc13, acc21, acc22, acc23)

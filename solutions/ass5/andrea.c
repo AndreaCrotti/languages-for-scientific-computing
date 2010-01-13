@@ -73,36 +73,19 @@ int main(int argc, char *argv[])
     }
     printf("writing output to file %s\n", OUTPUT_FILE);
 
-    // this output file is always written
-    if ((sw == 0) || (sw == 1)) {
-      FILE *output = fopen(OUTPUT_FILE, "w");
+    // we assume that the input from the comma
+    FILE *output = fopen(OUTPUT_FILE, "w");
 
-      // producing the 2 vectors
-      char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
-      // and then add both to it
-      fprintf(output, ticks, l, s, r);
-      fprintf(output, "andreatimes = ");
-      print_vector_to_matlab(output, times, n);
+    // producing the 2 vectors
+    char ticks[] = "andreaticks = [ %d:%d:%d ]\n";
+    // and then add both to it
+    fprintf(output, ticks, l, s, r);
+    fprintf(output, "andreatimes = ");
+    print_vector_to_matlab(output, times, n);
+    fclose(output);
 
-      fclose(output);
-    }
-
-    if (sw == 0) {
-      //producing the plot, always using the data collected
-      printf("writing graph generator to %s\n", OUTPUT_GRAPH);
-      FILE *graph = fopen(OUTPUT_GRAPH, "w");
-
-      // only works with octave
-      fprintf(graph, "#!/usr/bin/octave --persist\n");
-      // the output file is always been generated
-      fprintf(graph, "source(\""OUTPUT_FILE"\");\n");
-      fprintf(graph, "title('time vs matrix dimension');\n");
-      fprintf(graph, "xlabel('dimension');\n");
-      fprintf(graph, "ylabel('time');\n");
-      fprintf(graph, "plot(andreaticks, andreatimes);\n");
-      
-      fclose(graph);
-    }
+    if (!sw)
+      printf("graph.m is already generated and made general\n");
 
     free(times);
   }

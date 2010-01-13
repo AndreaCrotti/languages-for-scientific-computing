@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 
     tot_time = TS - ctime;
     printf("execution time was: %f\n;", tot_time);
+    free(L); free(y);
   }
   
   else if (argc == 5) {
@@ -66,7 +67,8 @@ int main(int argc, char *argv[])
       ctime = TS;
       forward_trsv(L, y, len);
       times[i] = TS - ctime;
-            
+
+      free(L); free(y);
       //printf("time spent for len %d = %.6f\n", len, times[i]);
     }
     printf("writing output to file %s\n", OUTPUT_FILE);
@@ -139,5 +141,6 @@ int check_trsv(double *L, double *y, int len,
   
   err = error(L, y_temp, y, len);
   printf("error obtained is %.10f\n", err);
+  free(y_temp);
   return 0;
 }

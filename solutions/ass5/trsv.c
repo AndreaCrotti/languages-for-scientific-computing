@@ -8,7 +8,7 @@
 #include <math.h> // power
 #include "utils.h"
 
-#define POW 100
+#define POW 5
 
 void run(int);
 
@@ -31,15 +31,15 @@ int main(int argc, char *argv[])
 
 void run(int n) {
   double *L, *y;
-  double ctime, tot_time;
+  double ctime, tot_time, err;
   long i;
+  // FIXME:overflowing here? why?
   long cycles = powl(10, POW);
 
   // arguments for dtrsv function
   char *up_lo = "l";
   char *trans = "T";
   char *diag = "n";
-  int order = n;
   int incx = 1;
 
   // initialization of ithe seed is done once for all
@@ -49,22 +49,25 @@ void run(int n) {
   L = gen_rand_tril(n);
   y = gen_rand_vector(n);
 
-  printf("matrix L:\n");
-  print_double_matrix(L, n);
-  
-  printf("vector y:\n");
-  print_double_vector(y, n);
-
   ctime = TS;
+  double *oldy = (double *) malloc(sizeof(double)*n);
+  
   for (i = 0; i < cycles; i++) {
-    
+    //int dtrsv_(char *, char *, char *, int *, double *, int *, double *, int *);
+
+    // I have to save the old y every time
+    memcpy(oldy, y, sizeof(double)*n);
+    dtrsv_(up_lo, trans, diag,
+  	   &n, L, &n, oldy, &incx);
   }
   tot_time = TS - ctime;
-
-  printf("computing %ld times the trsv took %f seconds \n", cycles, tot_time);
-  printf("resulting vector x:\n");
-  print_double_vector(y, n);
+  
+  err = error(L, y, oldy, n);
+  
+  printf("n=%d\n", n);
+  printf("error=%"PRECISION"\n", err);
+  printf("executing %ld times took %f seconds\n", cycles, tot_time);
 
   // finally cleaning the memory
-  free(y); free(L);
+  free(y); free(L); free(oldy);
 }

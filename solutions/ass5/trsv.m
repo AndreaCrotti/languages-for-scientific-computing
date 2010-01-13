@@ -136,7 +136,6 @@ for dim = dim_range
       endfor
     endfor
   endfor
-    
 endfor
 
 #gen_plot(range, acc11, acc12, acc13, acc21, acc22, acc23)

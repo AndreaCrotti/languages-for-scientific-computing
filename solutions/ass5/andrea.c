@@ -14,16 +14,17 @@
 
 // To test my result print them to file and then load the results in octave
 
-double *forward_trsv(double *, double *, int);
+void forward_trsv(double *, double *, int);
+void forward_trsv_over(double *, double *, int);
 int check_trsv(double *L, double *y, int len,
-	       double * (*trsv)(double *, double *, int));
+	       void (*trsv)(double *, double *, int));
 
 int main(int argc, char *argv[])
 {
   // for lazyness we'll assume that the arguments are passed correctly
   int n, i, len;
   double ctime, tot_time;
-  double *L, *x, *y;
+  double *L,*y;
   // seeding the random generator
   srand48( (unsigned)time((time_t *) NULL )); 
 
@@ -63,12 +64,10 @@ int main(int argc, char *argv[])
       y = gen_rand_vector(len);
 
       ctime = TS;
-      x = forward_trsv(L, y, len);
+      forward_trsv(L, y, len);
       times[i] = TS - ctime;
             
       //printf("time spent for len %d = %.6f\n", len, times[i]);
-
-      free(L); free(y); free(x);
     }
     printf("writing output to file %s\n", OUTPUT_FILE);
 
@@ -113,7 +112,7 @@ int main(int argc, char *argv[])
 }
 
 // try to optimize this in some ways
-double *forward_trsv(double *L, double *y, int len) {
+void forward_trsv(double *L, double *y, int len) {
   // one advice is to use the upper part of the matrix for temp space
   int i, j;
   double *x = (double *) malloc(sizeof(double) * len);
@@ -124,24 +123,42 @@ double *forward_trsv(double *L, double *y, int len) {
     }
     x[i] /= L[i*(len + 1)];
   }
-  return x;
+  // we now assign the right pointers
+  // FIXME: doesn't work as it should assigning pointers in this way
+  y = x;
+  free(y);
 }
 
 // this version overwrites y using less memory and should be faster
-double *forward_trsv_over(double *L, double *y, int len) {
+void forward_trsv_over(double *L, double *y, int len) {
   // We must use upper part of the matrix as temporary cells to compute
   // intermediate results.
+  int i, j;
+  for (i = 0; i < len; i++) {
+    for (j = 0; j < i; j++) {
+      y[i] -= L[i*len + j] * y[j];
+      
+    }
+  }
+  
 }
 
 // checking correctness of our algorithm
 int check_trsv(double *L, double *y, int len,
-	       double * (*trsv)(double *, double *, int)) {
+	       void (*trsv)(double *, double *, int)) {
 
   double acc;
-  double *x = malloc(sizeof(double) * len);
-  x = (*trsv) (L, y, len);
+  double *y_temp = malloc(sizeof(double) * len);
+  print_double_vector(y, len);
+  memcpy(y_temp, y, len);
+
+  print_double_vector(y_temp, len);
+  (*trsv) (L, y, len);
   
-  acc = accuracy(L, y, x, len);
+  print_double_vector(y, len);
+  acc = accuracy(L, y_temp, y, len);
   printf("accuracy obtained is %.10f\n", acc);
   return 0;
 }
+
+

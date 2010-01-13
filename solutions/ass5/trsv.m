@@ -15,21 +15,23 @@ function x = trsv(L, y, b, alg)
 
   ## setting initial values
   Ltl = L(1:0, 1:0);
-  Lbl = L(1:end, 1:0);
-  Lbr = L(1:end, 1:end);
+  Lbl = L(:, 1:0);
+  Lbr = L(:, :);
   
   xt = x(1:0);
-  xb = x(1:end);
+  xb = x(:);
   yt = y(1:0);
-  yb = y(1:end);
+  yb = y(:);
 
   while size(Ltl) < size(L)
     ## partitioning
     L00 = Ltl;
     ## FIXME: when b > 1 this doesn't work
-    L10 = Lbl(1:b, :);
-    L20 = Lbl(b+1:end, :);
+    ## getting an error with the columns dimensions
+    L01 = zeros(rows(L00), 1:b);
     L11 = Lbr(1:b, 1:b);
+    L10 = Lbl(1:b, :); 
+    L20 = Lbl(b+1:end, :);
     L21 = Lbr(b+1:end, 1:b);
     L22 = Lbr(b+1:end, b+1:end);
 
@@ -66,7 +68,8 @@ function x = trsv(L, y, b, alg)
     endif
 
     ## continue with part
-    Ltl = [[ L00 zeros(rows(L00), columns(L11)) ] ; [ L10 L11 ]];
+    ## BUG, L01 can't be simply 0
+    Ltl = [ [ L00 L01 ]  ; [ L10 L11 ]];
     Lbl = [ L20  L21 ];
     Lbr = L22;
 
@@ -94,7 +97,7 @@ title("analysis of trsv precision");
 xlabel("dimension");
 ylabel("error");
 
-for b = 1:2
+for b = 1:1
   ## adding info about what algorithm and if blocked/non blocked code
   for alg = 1:2
     xax = 1;
@@ -108,7 +111,9 @@ for b = 1:2
       err3(xax) = error(m3, y, b, alg);
       xax = xax + 1;
     endfor
-    
+#    err1
+ #   err2
+  #  err3
     # this should put in a for loop
     plot(dim_range, err1, sprintf("+-%d;b=%d,alg=%d,mat=1;", 1*b, b, alg));
     plot(dim_range, err2, sprintf("+-%d;b=%d,alg=%d,mat=2;", 2*b, b, alg));

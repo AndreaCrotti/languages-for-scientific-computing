@@ -27,18 +27,18 @@ function x = trsv(L, y, b, alg)
     ## partitioning
     L00 = Ltl;
     L10 = Lbl(1:b, :);
-    L20 = Lbl(b+1:rows(Lbl), :);
+    L20 = Lbl(b+1:end, :);
     L11 = Lbr(1:b, 1:b);
-    L21 = Lbr(b+1:rows(Lbr), 1:b);
-    L22 = Lbr(b+1:rows(Lbr), b+1:columns(Lbr));
+    L21 = Lbr(b+1:end, 1:b);
+    L22 = Lbr(b+1:end, b+1:end);
 
     x0 = xt;
     x1 = xb(1:b);
-    x2 = xb(b+1:length(xb));
+    x2 = xb(b+1:end);
 
     y0 = yt;
     y1 = yb(1:b);
-    y2 = yb(b+1:length(yb));
+    y2 = yb(b+1:end);
     
     ## TODO: pass to unblocked algorithm?
     ## math part, choosing which algorithm to execute
@@ -46,6 +46,7 @@ function x = trsv(L, y, b, alg)
       y1 = y1 - L10 * x0;
 
       ## when we have a matrix instead of inverting we call recursively trsv
+      ## the inner calls are now unblocked
       if (b > 1)
 	x1 = trsv(L11, y1, 1, alg);
       else
@@ -56,15 +57,11 @@ function x = trsv(L, y, b, alg)
 
     if (alg == 2)
       if (b > 1)
-	x1 = trsv(L11, y1, b, alg);
+	x1 = trsv(L11, y1, 1, alg);
       else
 	x1 = L11^(-1) * y1;
       endif
-      y2
-      L21
-      x1
-      ## FIXME: Still an error here of nonconformant operators
-      y2 = y2 - L21 * x1;
+      y2 = vec(y2) - L21 * x1;
 
     endif
 

@@ -8,3 +8,4 @@
 
 * Known bugs
   - trsv.m doesn't work for b > 1
+  - strange errors given by blas trsv, probably due to norm function or pointer error

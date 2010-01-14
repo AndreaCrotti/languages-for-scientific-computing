@@ -53,8 +53,6 @@ void run(int n) {
   double *oldy = (double *) malloc(sizeof(double)*n);
   
   for (i = 0; i < cycles; i++) {
-    //int dtrsv_(char *, char *, char *, int *, double *, int *, double *, int *);
-
     // I have to save the old y every time
     memcpy(oldy, y, sizeof(double)*n);
     dtrsv_(up_lo, trans, diag,

@@ -28,7 +28,7 @@ function x = trsv(L, y, b, alg)
     L00 = Ltl;
     ## FIXME: when b > 1 this doesn't work
     ## getting an error with the columns dimensions
-    L01 = zeros(rows(L00), 1:b);
+    L01 = zeros(rows(L00), b);
     L11 = Lbr(1:b, 1:b);
     L10 = Lbl(1:b, :); 
     L20 = Lbl(b+1:end, :);
@@ -105,15 +105,12 @@ for b = 1:1
       y = rand(dim, 1);
       m1 = tril(rand(dim));
       m2 = tril(rand(dim) + eye(dim));
-      m3 = tril(randn(dim));	  
+      m3 = tril(randn(dim));
       err1(xax) = error(m1, y, b, alg);
       err2(xax) = error(m2, y, b, alg);
       err3(xax) = error(m3, y, b, alg);
       xax = xax + 1;
     endfor
-#    err1
- #   err2
-  #  err3
     # this should put in a for loop
     plot(dim_range, err1, sprintf("+-%d;b=%d,alg=%d,mat=1;", 1*b, b, alg));
     plot(dim_range, err2, sprintf("+-%d;b=%d,alg=%d,mat=2;", 2*b, b, alg));

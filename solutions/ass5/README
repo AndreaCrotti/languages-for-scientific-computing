@@ -1,0 +1,10 @@
+* Compiling
+  Edit the Makefile and change those two variables:
+  BLAS = $(HOME)/libs/c/GotoBLAS
+  CC = gcc
+
+  and then
+  make will compile everything
+
+* Known bugs
+  - trsv.m doesn't work for b > 1

@@ -6,7 +6,7 @@ OPTIMIZE = -O0 # disable optimization
 DEBUG = -g
 CFLAGS = -Wall $(DEBUG) $(OPTIMIZE)
 
-SOURCES = andrea.c trsv.c trsv.m output.m graph.m utils.c utils.h Makefile
+SOURCES = andrea.c trsv.c trsv.m output.m graph.m utils.c utils.h Makefile README
 TARFILE = andrea_crotti.tar.gz
 
 all : clean trsv andrea

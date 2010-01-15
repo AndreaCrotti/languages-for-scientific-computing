@@ -1,5 +1,4 @@
 // This simple shell script can see the accuracy
-// for i in $(jot - 2 1000); do ./andrea $i | grep accuracy; done
 
 #include <stdlib.h>
 #include <stdio.h>

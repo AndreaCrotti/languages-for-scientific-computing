@@ -97,5 +97,7 @@ void forward_trsv(double *L, double *y, int len) {
     }
     x[i] /= L[i*(len + 1)];
   }
+  // TODO: check with valgrind if everything is still fine
+  free(y);
   y = x;
 }

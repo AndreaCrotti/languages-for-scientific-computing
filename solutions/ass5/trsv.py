@@ -7,20 +7,16 @@ for prototyping and testing
 
 import numpy as np
 import random
-
-from pprint import pprint
+import unittest
 
 def gen_matrix(len):
-    matrix = [[random.random() for _ in range(len)] for _ in range(len)]
+    matrix = np.matrix([[random.random() for _ in range(len)] for _ in range(len)])
     for i in range(len):
         matrix[i][i] += len
     return matrix
 
 def gen_vector(len):
     return [random.random() for _ in range(len)]
-
-# Use numpy whenever possible
-# mat = np.matrix(gen_matrix(10))
 
 def solve(L, y):
     "Return x such that L*x = y where L is triangular"
@@ -37,12 +33,14 @@ def gen_tri_matrix(len):
 def gen_int_vector(len):
     return [random.randrange(1, 10) for i in range(len)]
 
-tri_l = [[1, 0, 0], [2, 1, 0], [3, 2, 1]]
-tri_y = [1, 1, 1]
-
-print solve(tri_l, tri_y)
-
 rtri = gen_tri_matrix(100)
 vtri = gen_int_vector(100)
-print rtri
-pprint(solve(rtri, vtri))
+
+
+class TestCase(unittest.TestCase):
+    
+    def __init__(self):
+        pass 
+
+if __name__ == '__main__':
+    unittest.main()

@@ -2,7 +2,7 @@
 BLAS = $(HOME)/libs/c/GotoBLAS
 CC = gcc
 
-OPTIMIZE = -O0 # disable optimization
+OPTIMIZE = -O3 # disable optimization
 DEBUG = -g
 CFLAGS = -Wall $(DEBUG) $(OPTIMIZE)
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "utils.h"
 
 // macro useful to pass from array index to position
@@ -97,7 +98,6 @@ void forward_trsv(double *L, double *y, int len) {
     }
     x[i] /= L[i*(len + 1)];
   }
-  // TODO: check with valgrind if everything is still fine
-  free(y);
-  y = x;
+  memcpy(y, x, sizeof(double) * len);
+  free(x);
 }
